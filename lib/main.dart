@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mikltea/screens/home/screens/home_screen.dart';
-import 'package:mikltea/screens/viewDemo/view_demo_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mikltea/screens/index.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,13 +16,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application ha\
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        textTheme: GoogleFonts.oswaldTextTheme(Theme.of(context).textTheme),
       ),
-      home: ViewDemoScreen(),
+      home: Index(), //ViewDemoScreen(),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mikltea/screens/tai_khoan.dart';
+import 'package:mikltea/screens/account/tai_khoan.dart';
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -29,17 +29,15 @@ class _IndexState extends State<Index> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xffFB9116),
         unselectedItemColor: const Color(0xff808089),
-        selectedLabelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13),
-        unselectedLabelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13),
+        selectedLabelStyle: const TextStyle(fontSize: 13),
+        unselectedLabelStyle: const TextStyle(fontSize: 13),
         showSelectedLabels: true,
         showUnselectedLabels: true,
         onTap: (int index) {
@@ -48,21 +46,16 @@ class _IndexState extends State<Index> {
           });
         },
         items: <BottomNavigationBarItem>[
-          bottomNavIte(0, 'Home', 30, 30, "assets/images/home.png", const Color(0xffFB9116),
-              const Color(0xff808089)),
-          bottomNavIte(1, 'Menu', 30, 30, "assets/images/menu.png", const Color(0xffFB9116),
-              const Color(0xff808089)),
-          bottomNavIte(2, 'Giỏ hàng', 30, 30, "assets/images/cart.png", const Color(0xffFB9116),
-              const Color(0xff808089)),
-          bottomNavIte(3, 'Tài khoản', 30, 30, "assets/images/user.png", const Color(0xffFB9116),
-              const Color(0xff808089)),
+          bottomNavIte(0, 'Home', 30, 30, "assets/images/home.png", const Color(0xffFB9116), const Color(0xff808089)),
+          bottomNavIte(1, 'Menu', 30, 30, "assets/images/menu.png", const Color(0xffFB9116), const Color(0xff808089)),
+          bottomNavIte(2, 'Giỏ hàng', 30, 30, "assets/images/cart.png", const Color(0xffFB9116), const Color(0xff808089)),
+          bottomNavIte(3, 'Tài khoản', 30, 30, "assets/images/user.png", const Color(0xffFB9116), const Color(0xff808089)),
         ],
       ),
     );
   }
 
-  BottomNavigationBarItem bottomNavIte(int index, String name, double width, double height,
-      String image, Color color1, Color color2) {
+  BottomNavigationBarItem bottomNavIte(int index, String name, double width, double height, String image, Color color1, Color color2) {
     return BottomNavigationBarItem(
       icon: Padding(
         padding: EdgeInsets.only(bottom: 5),

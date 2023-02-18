@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class InfoTaiKhoan extends StatefulWidget {
   const InfoTaiKhoan({super.key});
@@ -14,15 +15,14 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thông tin tài khoản'),
-      ),
+      extendBodyBehindAppBar: true,
+      appBar: appBar(),
       body: SingleChildScrollView(
         child: Container(
           decoration: const BoxDecoration(color: Color(0xffFEDEB9)),
           child: Column(
             children: [
-              const SizedBox(height: 100),
+              const SizedBox(height: 170),
               Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -89,7 +89,7 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
                       children: [
-                        const SizedBox(height: 75),
+                        const SizedBox(height: 50),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
@@ -323,6 +323,60 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      title: const Text('Thông tin tài khoản'),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(color: const Color(0xffFFFFFF), borderRadius: BorderRadius.circular(10)),
+          alignment: Alignment.center,
+          child: SvgPicture.asset(
+            'assets/images/Arrow - Left.svg',
+            width: 20,
+            height: 20,
+          ),
+        ),
+      ),
+      actions: [
+        GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Container(
+            width: 80,
+            height: 40,
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(color: const Color(0xffF2F2F2), borderRadius: BorderRadius.circular(20)),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/images/dots.svg',
+                  width: 10,
+                  height: 4,
+                ),
+                const VerticalDivider(
+                  color: Colors.black,
+                  indent: 10,
+                  endIndent: 10,
+                  thickness: 1,
+                ),
+                SvgPicture.asset(
+                  'assets/images/round-x.svg',
+                  width: 20,
+                  height: 20,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

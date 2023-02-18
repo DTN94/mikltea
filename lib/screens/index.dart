@@ -58,7 +58,7 @@ class _IndexState extends State<Index> {
   BottomNavigationBarItem bottomNavIte(int index, String name, double width, double height, String image, Color color1, Color color2) {
     return BottomNavigationBarItem(
       icon: Padding(
-        padding: EdgeInsets.only(bottom: 5),
+        padding: const EdgeInsets.only(bottom: 5),
         child: SizedBox(
           height: height,
           width: width,

@@ -8,8 +8,8 @@ class InfoTaiKhoan extends StatefulWidget {
 }
 
 class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
-  bool light_google = false;
-  bool light_fb = false;
+  bool lightGoogle = false;
+  bool lightFb = false;
 
   @override
   Widget build(BuildContext context) {
@@ -266,11 +266,11 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                                   child: FittedBox(
                                     fit: BoxFit.cover,
                                     child: Switch(
-                                      value: light_google,
+                                      value: lightGoogle,
                                       activeColor: Colors.green,
                                       onChanged: (bool value) {
                                         setState(() {
-                                          light_google = value;
+                                          lightGoogle = value;
                                         });
                                       },
                                     ),
@@ -300,11 +300,11 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                                   child: FittedBox(
                                     fit: BoxFit.cover,
                                     child: Switch(
-                                      value: light_fb,
+                                      value: lightFb,
                                       activeColor: Colors.green,
                                       onChanged: (bool value) {
                                         setState(() {
-                                          light_fb = value;
+                                          lightFb = value;
                                         });
                                       },
                                     ),

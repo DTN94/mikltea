@@ -11,16 +11,17 @@ class _ItemProductState extends State<ItemProduct> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 145,
+      width: 150,
       child: Card(
-        elevation: 0,
+        elevation: 0,        
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20),          
           child: Container(
             color: Color(0xFFEFE3FF),
+            padding: EdgeInsets.all(5),
             child: Column(
               children: [
-                Image.asset('assets/images/product1.png',fit: BoxFit.fitWidth,),
+                Image.asset('assets/images/product.png',fit: BoxFit.fitWidth,),
                 SizedBox(height: 10),
                 Text('Trân Châu Đường Đen',style: TextStyle(fontSize: 13,color: Colors.black),),
                 SizedBox(height: 5),

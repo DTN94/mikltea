@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:mikltea/screens/product/screens/list1_screens.dart';
-import 'package:mikltea/screens/product/screens/list_screens.dart';
-import 'package:mikltea/screens/product/widgets/product_widget.dart';
+import 'package:mikltea/screens/product/screens/product_screens.dart';
 import 'package:mikltea/screens/product/widgets/search_widget.dart';
 
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+import '../widgets/product_widget.dart';
+
+class ListProduct extends StatefulWidget {
+  const ListProduct({Key? key}) : super(key: key);
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
-
+  State<ListProduct> createState() => _ListProductState();
 }
-final List<String> imageList = [
-  "assets/images/avatar.jpg",
-  "assets/images/product_top.png",
-  "assets/images/avatar.jpg",
-  "assets/images/product_top.png",
-  "assets/images/avatar.jpg",
-  "assets/images/product_top.png"
-];
 
-class _ProductScreenState extends State<ProductScreen> {
+class _ListProductState extends State<ListProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,10 +37,10 @@ class _ProductScreenState extends State<ProductScreen> {
           children: [
             RichText(
                 text: TextSpan(
-                  children: [
-                    TextSpan(text: 'Xin Chào ',style: TextStyle(fontSize: 13,color: Color(0xFF656565),fontFamily: "Oswald-Regular"),),
-                    TextSpan(text: 'Nguyen Van A',style: TextStyle(fontSize: 13,color: Color(0xFF656565),fontFamily: 'Oswald-Medium'),)
-                  ]
+                    children: [
+                      TextSpan(text: 'Xin Chào ',style: TextStyle(fontSize: 13,color: Color(0xFF656565),fontFamily: "Oswald-Regular"),),
+                      TextSpan(text: 'Nguyen Van A',style: TextStyle(fontSize: 13,color: Color(0xFF656565),fontFamily: 'Oswald-Medium'),)
+                    ]
                 )
             ),
             Wrap(
@@ -97,21 +89,21 @@ class _ProductScreenState extends State<ProductScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: Text('Trà Sữa',
-                      style: TextStyle(fontSize: 14,color: Color(0xFFFB9116),fontFamily: 'Oswald-Medium'),
-                      textAlign: TextAlign.left,
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductScreen()));
+                      },
+                      child: Text('Trà Sữa',
+                        style: TextStyle(fontSize: 14,color: Colors.black,fontFamily: 'Oswald-Medium'),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
                   ),
                   Expanded(
-                      child: InkWell(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ListProduct()));
-                        },
-                        child: Text('Trà Trái cây',
-                          style: TextStyle(fontSize: 14,color: Colors.black,fontFamily: 'Oswald-Medium'),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
+                    child: Text('Trà Trái cây',
+                      style: TextStyle(fontSize: 14,color: Color(0xFFFB9116),fontFamily: 'Oswald-Medium'),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
                   Expanded(
                     child: InkWell(
@@ -126,64 +118,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-
-              GFCarousel(
-                items: imageList.map((url) {
-                    return Container(
-                      margin: EdgeInsets.all(0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        child: Image.asset(url,
-                          fit: BoxFit.cover,
-                          width: 1000.0,
-                        ),
-                      ),
-                    );
-                  },
-                ).toList(),
-                viewportFraction: 1.0,
-                autoPlay: true,
-                hasPagination: true,
-                activeIndicator: Color(0xFFFB9116),
-                enableInfiniteScroll: true,
-                reverse: true,
-                pagerSize: 15.0,
-              ),
-
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Phổ Biến Nhất',style: TextStyle(fontSize: 15,fontFamily: 'Oswald-Medium',color: Colors.black),),
-                  Text('Xem tất cả',style: TextStyle(fontSize: 12,color: Color(0xFFFB9116)),),
-                ],
-              ),
-              SizedBox(height: 20),
-
-              SizedBox(
-                height: 190,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ItemProduct(),
-                    ItemProduct(),
-                    ItemProduct(),
-                    ItemProduct(),
-                    ItemProduct(),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Best Seller',style: TextStyle(fontSize: 15,fontFamily: 'Oswald-Medium',color: Colors.black),),
-                  Text('Xem tất cả',style: TextStyle(fontSize: 12,color: Color(0xFFFB9116)),),
-                ],
-              ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               GridView.count(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -200,7 +135,20 @@ class _ProductScreenState extends State<ProductScreen> {
                   ItemProduct(),
                 ],
               ),
-
+              SizedBox(height: 10),
+              Container(
+                alignment: Alignment.center,
+                child: GFButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductScreen()));
+                  },
+                  text: "Xem Thêm",
+                  color: Color(0xFFFB9116),
+                  padding: EdgeInsets.only(left: 50,right: 50),
+                  shape: GFButtonShape.pills,
+                  size: GFSize.MEDIUM,
+                ),
+              ),
             ],
           ),
         ),

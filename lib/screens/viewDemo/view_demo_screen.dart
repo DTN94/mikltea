@@ -24,11 +24,9 @@ class _ViewDemoScreenState extends State<ViewDemoScreen> {
               children: [
                 ElevatedButton(onPressed:(){
                   Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-
                 }, child:Text("Home")),
                 ElevatedButton(onPressed:(){
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ProductScreen()));
-
                 }, child:Text("Product"))
               ],
             ),

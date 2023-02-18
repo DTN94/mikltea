@@ -76,11 +76,7 @@ packages:
     source: sdk
     version: "0.0.0"
   getwidget:
-<<<<<<< Updated upstream
-    dependency: "direct dev"
-=======
     dependency: "direct main"
->>>>>>> Stashed changes
     description:
       name: getwidget
       sha256: f98a1a96d946e640e4b5e3bd1fd692a50b53f3d1afc8c128f098139a0cf5607e

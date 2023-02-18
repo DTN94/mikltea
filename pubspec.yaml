@@ -68,6 +68,10 @@ flutter:
     - assets/images/user.png
     - assets/images/tk_top.png
     - assets/images/avatar.jpg
+    - assets/images/flag_vi.png
+    - assets/images/check.png
+    - assets/images/google.png
+    - assets/images/facebook.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -94,6 +98,9 @@ flutter:
           weight: 600
         - asset: assets/fonts/Oswald/Oswald-Bold.ttf
           weight: 700
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

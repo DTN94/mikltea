@@ -137,6 +137,8 @@ class _ProductScreenState extends State<ProductScreen> {
                   ItemProduct(),
                   ItemProduct(),
                   ItemProduct(),
+                  ItemProduct(),
+                  ItemProduct(),
                 ],
               )
             ],

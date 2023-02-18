@@ -6,8 +6,6 @@ class Cart {
   late String diachinhan;
   late String sanpham;
   late num price;
-  
-  // Cart({required this.trangthai})
 
   Cart(
       [String? trangthai,

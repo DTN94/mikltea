@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mikltea/screens/cart/screens/cart_empty_screen.dart';
 import 'package:mikltea/screens/cart/screens/cart_screen.dart';
+import 'package:mikltea/screens/index.dart';
 
 
 void main() {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           textTheme: GoogleFonts.oswaldTextTheme(Theme.of(context).textTheme),
         ),
-      home: cart(),
+      home: Index(),
     );
   }
 }

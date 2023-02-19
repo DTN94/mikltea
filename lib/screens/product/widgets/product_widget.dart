@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mikltea/screens/product/screens/detail_screens.dart';
 
 class ItemProduct extends StatefulWidget {
   const ItemProduct({Key? key}) : super(key: key);
@@ -23,7 +24,12 @@ class _ItemProductState extends State<ItemProduct> {
               children: [
                 Image.asset('assets/images/product.png',fit: BoxFit.fitWidth,),
                 SizedBox(height: 10),
-                Text('Trân Châu Đường Đen',style: TextStyle(fontSize: 13,color: Colors.black),),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetailProduct()));
+                  },
+                  child: Text('Trân Châu Đường Đen',style: TextStyle(fontSize: 13,color: Colors.black),),
+                ),
                 SizedBox(height: 5),
                 Text('49.000đ',style: TextStyle(fontSize: 13,color: Color(0xFFFB9116)),),
               ],

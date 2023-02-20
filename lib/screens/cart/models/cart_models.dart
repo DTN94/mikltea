@@ -1,4 +1,5 @@
 class Cart {
+  late String mdh;
   late String trangthai;
   late String ngay;
   late String gio;
@@ -8,13 +9,15 @@ class Cart {
   late num price;
 
   Cart(
-      [String? trangthai,
-      String? ngay,
-      String? gio,
-      String? diachicuahang,
-      String? diachinhan,
-      String? sanpham,
-      num? price]) {
+      [String? mdh,
+        String? trangthai,
+        String? ngay,
+        String? gio,
+        String? diachicuahang,
+        String? diachinhan,
+        String? sanpham,
+        num? price]) {
+    this.mdh = mdh ?? "";
     this.trangthai = trangthai ?? "";
     this.ngay = ngay ?? "";
     this.gio = gio ?? "";
@@ -26,6 +29,6 @@ class Cart {
 
   @override
   String toString() {
-    return 'Cart{trangthai: $trangthai, ngay: $ngay, gio: $gio, diachicuahang: $diachicuahang, diachinhan: $diachinhan, sanpham: $sanpham, price: $price}';
+    return 'Cart{mdh: $mdh,trangthai: $trangthai, ngay: $ngay, gio: $gio, diachicuahang: $diachicuahang, diachinhan: $diachinhan, sanpham: $sanpham, price: $price}';
   }
 }

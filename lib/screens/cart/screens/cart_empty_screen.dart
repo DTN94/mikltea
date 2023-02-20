@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:mikltea/screens/product/screens/product_screen.dart';
 
 import 'cart_history_screen.dart';
 
@@ -73,7 +74,7 @@ class _cart_emptyState extends State<cart_empty> {
                 ),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CartHistory()));
+                  MaterialPageRoute(builder: (context) => ProductScreen()));
             },
             child: const Text(
               'Đặt Hàng Ngay',

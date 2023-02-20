@@ -15,7 +15,8 @@ class _CartHistoryState extends State<CartHistory> {
   @override
   Widget build(BuildContext context) {
     final itemCart = Cart(
-        "Đang chuẩn bị",
+        "101",
+        "Đã giao hàng",
         "30/11/2022",
         "4:20",
         "CVPM Quang Trung,P. Tân Chánh Hiệp, Quận 12",

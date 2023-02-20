@@ -31,6 +31,7 @@ class _IndexState extends State<Index> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xffFB9116),
         unselectedItemColor: const Color(0xff808089),

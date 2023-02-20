@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mikltea/screens/home/screens/home_screen.dart';
+import 'package:mikltea/screens/product/screens/home_screens.dart';
 
-import '../product/screens/product_screens.dart';
+
 class ViewDemoScreen extends StatefulWidget {
   const ViewDemoScreen({Key? key}) : super(key: key);
 
@@ -26,7 +27,7 @@ class _ViewDemoScreenState extends State<ViewDemoScreen> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                 }, child:Text("Home")),
                 ElevatedButton(onPressed:(){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePageProduct()));
                 }, child:Text("Product"))
               ],
             ),

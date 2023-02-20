@@ -21,7 +21,8 @@ final List<String> imageList = [
   "assets/images/product_top.png"
 ];
 
-class _ProductScreenState extends State<ProductScreen> {
+class _ProductScreenState extends State<ProductScreen>{
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,6 +133,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 items: imageList.map((url) {
                     return Container(
                       margin: EdgeInsets.all(0),
+                      padding: EdgeInsets.only(bottom: 35),
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                         child: Image.asset(url,
@@ -148,7 +150,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 activeIndicator: Color(0xFFFB9116),
                 enableInfiniteScroll: true,
                 reverse: true,
-                pagerSize: 15.0,
+                pagerSize: 13.0,
               ),
 
               SizedBox(height: 20),
@@ -200,7 +202,6 @@ class _ProductScreenState extends State<ProductScreen> {
                   ItemProduct(),
                 ],
               ),
-
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:mikltea/screens/product/screens/home_screens.dart';
 import 'package:mikltea/screens/product/screens/list_screens.dart';
 import 'package:mikltea/screens/product/screens/product_screens.dart';
 import 'package:mikltea/screens/product/widgets/search_widget.dart';
@@ -91,7 +92,7 @@ class _ListProductState extends State<ListProduct1> {
                   Expanded(
                     child: InkWell(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePageProduct()));
                       },
                       child: Text('Trà Sữa',
                         style: TextStyle(fontSize: 14,color: Colors.black,fontFamily: 'Oswald-Medium'),

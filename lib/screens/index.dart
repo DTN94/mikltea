@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mikltea/screens/account/tai_khoan.dart';
+import 'package:mikltea/screens/cart_detail/cart_detail.dart';
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -19,10 +20,7 @@ class _IndexState extends State<Index> {
       'Index 1: Menu',
       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
     ),
-    Text(
-      'Index 2: Đơn hàng',
-      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-    ),
+    CartDetail(),
     TaiKhoan(),
   ];
 

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         textTheme: GoogleFonts.oswaldTextTheme(Theme.of(context).textTheme),
       ),
-      home: const Index(), //ViewDemoScreen(),
+      home: const Index(),
     );
   }
 }

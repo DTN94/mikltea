@@ -11,11 +11,11 @@ class CartDetail extends StatefulWidget {
 }
 
 class _CartDetailState extends State<CartDetail> {
-  List<Product> products = [
-    Product(id: 1, name: 'Sữa Tươi Trân Chân Đường Đen', photo: 'product1.png', size: 'Size M', price: 49000, value: 1),
-    Product(id: 2, name: 'Trà Xoài Kem Cheese', photo: 'product2.png', size: 'Size M', price: 49000, value: 1),
-    Product(id: 3, name: 'Trà Trái Cây Nhiệt Đới', photo: 'product3.png', size: 'Size M', price: 49000, value: 1),
-  ];
+  List<Product> products = [];
+
+  void _getProducts() {
+    products = Product.getProducts();
+  }
 
   var payments = [
     {'name': 'MoMo', 'photo': 'momo.png'},
@@ -23,6 +23,7 @@ class _CartDetailState extends State<CartDetail> {
 
   @override
   Widget build(BuildContext context) {
+    _getProducts();
     return Scaffold(
       backgroundColor: const Color(0xffF5F5FA),
       appBar: appBar(),
@@ -261,7 +262,7 @@ class _CartDetailState extends State<CartDetail> {
                       style: const TextStyle(fontFamily: 'Oswald', fontWeight: FontWeight.w300, fontSize: 14, color: Color(0xff6C6C6C)),
                     ),
                     Text(
-                      '${products[index].price}đ x${products[index].value}',
+                      '${products[index].price}đ x1',
                       style: const TextStyle(fontFamily: 'Oswald', fontWeight: FontWeight.w300, fontSize: 14, color: Color(0xff222222)),
                     ),
                   ],

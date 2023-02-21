@@ -33,7 +33,7 @@ class _LoginState extends State<Register> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Đăng nhập tài khoản của bạn',
+                'Đăng ký tài khoản',
                 style: TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff222222), fontWeight: FontWeight.w300),
                 textAlign: TextAlign.center,
               ),

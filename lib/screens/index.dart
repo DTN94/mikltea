@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mikltea/screens/account/tai_khoan.dart';
 import 'package:mikltea/screens/cart_detail/cart_detail.dart';
 
+import 'home/home_screen.dart';
+import 'menu/menu_screen.dart';
+
 class Index extends StatefulWidget {
   const Index({super.key});
   @override
@@ -12,14 +15,8 @@ class _IndexState extends State<Index> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = [
-    Text(
-      'Index 0: Home',
-      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-    ),
-    Text(
-      'Index 1: Menu',
-      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-    ),
+    Home(),
+    Menu(),
     CartDetail(),
     TaiKhoan(),
   ];

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mikltea/screens/cart/models/product_model.dart';
-import '../models/cart_models.dart';
+import '../../../models/order_models.dart';
+import '../../../models/product_model.dart';
 
-class CartOrderDetail extends StatefulWidget {
-  const CartOrderDetail({Key? key}) : super(key: key);
+class OrderDetail extends StatefulWidget {
+  const OrderDetail({Key? key}) : super(key: key);
 
   @override
-  State<CartOrderDetail> createState() => _CartOrderDetailState();
+  State<OrderDetail> createState() => _OrderDetailState();
 }
 
-class _CartOrderDetailState extends State<CartOrderDetail> {
+class _OrderDetailState extends State<OrderDetail> {
   @override
   Widget build(BuildContext context) {
-    final CartItem = Cart(
+    final CartItem = ListOrder(
         "101",
         "Đang chuẩn bị",
         "30/11/2022",
@@ -22,7 +22,6 @@ class _CartOrderDetailState extends State<CartOrderDetail> {
         "Đường Điện Biên Phủ, Phường 22, Quận Bình Thạnh, HCM",
         "Sữa tươi trân châu đường đen (x1), Trà Xoài Kem Cheese (x1), Trà trái cây nhiệt đới (x1)",
         147000);
-
     List<Product> iproduct = [
       Product(
           id: 1,

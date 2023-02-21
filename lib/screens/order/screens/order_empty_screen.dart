@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:mikltea/screens/product/screens/product_screen.dart';
+import 'order_history_screen.dart';
 
-import 'cart_history_screen.dart';
-
-class cart_empty extends StatefulWidget {
-  const cart_empty({Key? key}) : super(key: key);
+class OrderEmpty extends StatefulWidget {
+  const OrderEmpty({Key? key}) : super(key: key);
 
   @override
-  State<cart_empty> createState() => _cart_emptyState();
+  State<OrderEmpty> createState() => _OrderEmptyState();
 }
 
-class _cart_emptyState extends State<cart_empty> {
+class _OrderEmptyState extends State<OrderEmpty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +24,7 @@ class _cart_emptyState extends State<cart_empty> {
           TextButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CartHistory()));
+                  MaterialPageRoute(builder: (context) => OrderHistory()));
             },
             child: const Text('Lịch sử đặt hàng',
                 style: TextStyle(

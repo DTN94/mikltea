@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mikltea/screens/cart/screens/cart_screen.dart';
+import 'package:mikltea/screens/product/screens/product_screen.dart';
+
+import 'order/screens/order_screen.dart';
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -16,11 +18,8 @@ class _IndexState extends State<Index> {
       'Home',
       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
     ),
-    Text(
-      'Menu',
-      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-    ),
-    cart(),
+    ProductScreen(),
+    Order(),
     Text(
       'Tài Khoản',
       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),

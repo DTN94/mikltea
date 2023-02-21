@@ -1,4 +1,4 @@
-class Cart {
+class ListOrder {
   late String mdh;
   late String trangthai;
   late String ngay;
@@ -8,7 +8,7 @@ class Cart {
   late String sanpham;
   late num price;
 
-  Cart(
+  ListOrder(
       [String? mdh,
         String? trangthai,
         String? ngay,

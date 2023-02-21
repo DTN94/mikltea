@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:mikltea/screens/cart/screens/cart_empty_screen.dart';
-import 'package:mikltea/screens/cart/screens/cart_history_screen.dart';
-import 'package:mikltea/screens/cart/widgets/cart_widgets.dart';
+import 'package:mikltea/models/order_models.dart';
+import 'package:mikltea/screens/order/screens/order_history_screen.dart';
+import 'package:mikltea/screens/order/widgets/order_widgets.dart';
 
-import '../models/cart_models.dart';
+import 'order_empty_screen.dart';
 
-class cart extends StatefulWidget {
-  const cart({Key? key}) : super(key: key);
+class Order extends StatefulWidget {
+  const Order({Key? key}) : super(key: key);
 
   @override
-  State<cart> createState() => _cartState();
+  State<Order> createState() => _OrderState();
 }
 
-class _cartState extends State<cart> {
+class _OrderState extends State<Order> {
   @override
   Widget build(BuildContext context) {
-    final itemCart = Cart("");
+    final itemCart = ListOrder("");
     if (itemCart.trangthai.isEmpty) {
-      return cart_empty();
+      return OrderEmpty();
     } else {
       return Scaffold(
         appBar: AppBar(
@@ -31,7 +31,7 @@ class _cartState extends State<cart> {
             TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartHistory()));
+                    MaterialPageRoute(builder: (context) => OrderHistory()));
               },
               child: const Text('Lịch sử đặt hàng',
                   style: TextStyle(
@@ -44,7 +44,7 @@ class _cartState extends State<cart> {
         ),
         backgroundColor: const Color(0xffF5F5FA),
         body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-          CartWidget(cart: itemCart),
+          OrderWidget(cart: itemCart),
         ]),
       );
     }

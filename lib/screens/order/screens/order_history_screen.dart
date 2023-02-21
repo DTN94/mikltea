@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import '../models/cart_models.dart';
-import 'package:mikltea/screens/cart/widgets/cart_widgets.dart';
+import '../../../models/order_models.dart';
+import '../widgets/order_widgets.dart';
 
-class CartHistory extends StatefulWidget {
-  const CartHistory({Key? key}) : super(key: key);
+class OrderHistory extends StatefulWidget {
+  const OrderHistory({Key? key}) : super(key: key);
 
   @override
-  State<CartHistory> createState() => _CartHistoryState();
+  State<OrderHistory> createState() => _OrderHistoryState();
 
 }
 
-class _CartHistoryState extends State<CartHistory> {
+class _OrderHistoryState extends State<OrderHistory> {
 
   @override
   Widget build(BuildContext context) {
-    final itemCart = Cart(
+    final itemCart = ListOrder(
         "101",
         "Đã giao hàng",
         "30/11/2022",
@@ -35,11 +35,11 @@ class _CartHistoryState extends State<CartHistory> {
       ),
       backgroundColor: const Color(0xffF5F5FA),
       body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-        CartWidget(cart:itemCart),
-        CartWidget(cart:itemCart),
-        CartWidget(cart:itemCart),
-        CartWidget(cart:itemCart),
-        CartWidget(cart:itemCart),
+        OrderWidget(cart:itemCart),
+        OrderWidget(cart:itemCart),
+        OrderWidget(cart:itemCart),
+        OrderWidget(cart:itemCart),
+        OrderWidget(cart:itemCart),
       ]),
     );
   }

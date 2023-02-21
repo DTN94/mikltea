@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mikltea/screens/cart/models/cart_models.dart';
-import 'package:mikltea/screens/cart/screens/cart_order_detail_screen.dart';
-import 'package:mikltea/screens/cart/screens/cart_screen.dart';
+import 'package:mikltea/screens/order/screens/order_detail_screen.dart';
 
-class CartWidget extends StatelessWidget {
-  final Cart cart;
 
-  const CartWidget({Key? key, required this.cart}) : super(key: key);
+import '../../../models/order_models.dart';
+
+class OrderWidget extends StatelessWidget {
+  final ListOrder cart;
+
+  const OrderWidget({Key? key, required this.cart}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class CartWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CartOrderDetail()));
+              MaterialPageRoute(builder: (context) => const OrderDetail()));
         },
         child: Column(
           children: [

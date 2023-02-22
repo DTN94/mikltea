@@ -120,8 +120,7 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                   hintText: 'Nguyen Huu Tho',
-                                  hintStyle:
-                                      const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
+                                  hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(width: 1, color: Color(0xffEAEAEA)),
                                     borderRadius: BorderRadius.circular(50.0),
@@ -153,8 +152,7 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                                         ),
                                         contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                         hintText: '+84',
-                                        hintStyle: const TextStyle(
-                                            fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
+                                        hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(width: 1, color: Color(0xffEAEAEA)),
                                           borderRadius: BorderRadius.circular(50.0),
@@ -176,8 +174,7 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                         hintText: '987654321',
-                                        hintStyle: const TextStyle(
-                                            fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
+                                        hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(width: 1, color: Color(0xffEAEAEA)),
                                           borderRadius: BorderRadius.circular(50.0),
@@ -207,8 +204,7 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                                   ), //Icon at the end
                                   contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                   hintText: 'huuthonina@gmail.com',
-                                  hintStyle:
-                                      const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
+                                  hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(width: 1, color: Color(0xffEAEAEA)),
                                     borderRadius: BorderRadius.circular(50.0),
@@ -227,8 +223,7 @@ class _InfoTaiKhoanState extends State<InfoTaiKhoan> {
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                   hintText: 'Đường Điện Biên Phủ, Phường 22, Q. Bình Thạnh, Tp. Hồ Chí Minh',
-                                  hintStyle:
-                                      const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
+                                  hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff222222)),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(width: 1, color: Color(0xffEAEAEA)),
                                     borderRadius: BorderRadius.circular(50.0),

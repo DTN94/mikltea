@@ -53,8 +53,7 @@ class _LoginState extends State<Register> {
                     labelText: 'Họ và tên (*)',
                     hintText: 'Nhập họ và tên',
                     labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                    hintStyle:
-                        const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -75,8 +74,7 @@ class _LoginState extends State<Register> {
                     labelText: 'Số điện thoại (*)',
                     hintText: 'Nhập số điện thoại',
                     labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                    hintStyle:
-                        const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -96,8 +94,7 @@ class _LoginState extends State<Register> {
                     labelText: 'Email của bạn',
                     hintText: 'Nhập email của bạn',
                     labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                    hintStyle:
-                        const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -118,8 +115,7 @@ class _LoginState extends State<Register> {
                     labelText: 'Mật khẩu',
                     hintText: 'Nhập mật khẩu',
                     labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                    hintStyle:
-                        const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -140,8 +136,7 @@ class _LoginState extends State<Register> {
                     labelText: 'Nhập lại mật khẩu',
                     hintText: 'Nhập lại mật khẩu',
                     labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                    hintStyle:
-                        const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                   ),
                 ),
               ),

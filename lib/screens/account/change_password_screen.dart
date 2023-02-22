@@ -27,12 +27,12 @@ class _ChangePasswordState extends State<ChangePassword> {
             ClipRRect(
               child: Image.asset('assets/images/change_password.jpg', width: double.infinity, height: 319),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Nhập mật khẩu mới của bạn',
@@ -56,8 +56,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         labelText: 'Mật khẩu',
                         hintText: 'Nhập mật khẩu',
                         labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                        hintStyle: const TextStyle(
-                            fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                        hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                       ),
                     ),
                   ),
@@ -78,8 +77,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         labelText: 'Nhập lại mật khẩu',
                         hintText: 'Nhập lại mật khẩu',
                         labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                        hintStyle: const TextStyle(
-                            fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                        hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                       ),
                     ),
                   ),

@@ -12,21 +12,29 @@ class Menu extends StatefulWidget {
   State<Menu> createState() => _MenuState();
 }
 
-List<Product> products = [];
 List<LProduct> lproduct = [];
 
 class _MenuState extends State<Menu> with TickerProviderStateMixin {
-  late TabController tabController;
+  late TabController _tabController;
+  int _selectedTab = 0;
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(vsync: this, length: LProduct.getProductLists().length);
-    tabController.addListener(_handleTabSelection);
+    _tabController = TabController(vsync: this, length: LProduct.getProductLists().length);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {
+          _selectedTab = _tabController.index;
+        });
+      }
+    });
   }
 
-  void _handleTabSelection() {
-    setState(() {});
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,44 +45,50 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
       appBar: appBar(context),
       body: Column(
         children: [
-          TabBar(
-            overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-            isScrollable: true,
-            dividerColor: Colors.transparent,
-            controller: tabController,
-            indicatorColor: Colors.transparent,
-            tabs: lproduct.map((var e) {
-              return SizedBox(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                    border: tabController.index == lproduct.indexOf(e)
-                        ? Border.all(color: Colors.white)
-                        : Border.all(color: const Color(0xff757575), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                    color: tabController.index == lproduct.indexOf(e) ? const Color(0xffFB9116) : Colors.white,
-                  ),
-                  child: Text(
-                    e.name,
-                    style: TextStyle(
-                      fontFamily: 'Oswald',
-                      fontSize: 16,
-                      color: tabController.index == lproduct.indexOf(e) ? Colors.white : const Color(0xff171717),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TabBar(
+                overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                isScrollable: true,
+                dividerColor: Colors.transparent,
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                padding: EdgeInsets.zero,
+                indicatorPadding: EdgeInsets.zero,
+                labelPadding: const EdgeInsets.only(right: 10),
+                indicatorWeight: 4,
+                tabs: lproduct.map((var e) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    decoration: BoxDecoration(
+                      border: _selectedTab == lproduct.indexOf(e) ? Border.all(color: Colors.white, width: 0) : Border.all(color: const Color(0xff757575), width: 1),
+                      borderRadius: BorderRadius.circular(50),
+                      color: _selectedTab == lproduct.indexOf(e) ? const Color(0xffFB9116) : Colors.white,
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                    child: Text(
+                      e.name,
+                      style: TextStyle(
+                        fontFamily: 'Oswald',
+                        fontSize: 16,
+                        color: _selectedTab == lproduct.indexOf(e) ? Colors.white : const Color(0xff171717),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
           Expanded(
             child: TabBarView(
-              controller: tabController,
+              controller: _tabController,
               children: lproduct.map((var e) {
-                return HomeView(id_list: e.id);
+                return MenuView(id_list: e.id);
               }).toList(),
             ),
           ),
-          SizedBox(height: 30)
+          const SizedBox(height: 30)
         ],
       ),
     );
@@ -112,31 +126,28 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
   }
 }
 
-class HomeView extends StatefulWidget {
+class MenuView extends StatelessWidget {
+  // ignore: non_constant_identifier_names
+  const MenuView({Key? key, required this.id_list}) : super(key: key);
   // ignore: non_constant_identifier_names
   final int id_list;
-  // ignore: non_constant_identifier_names
-  const HomeView({Key? key, required this.id_list}) : super(key: key);
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
-    products = Product.getByList(widget.id_list);
-
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          productBestSell(context),
-        ],
+      child: FutureBuilder<List<Product>>(
+        future: Product.getByListAsync(id_list),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return buildColumn(snapshot.data!, context);
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
 
-  Column productBestSell(BuildContext context) {
+  Column buildColumn(List<Product> products, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -147,51 +158,10 @@ class _HomeViewState extends State<HomeView> {
             child: GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: products.length,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
+              itemCount: (products.isNotEmpty) ? products.length : 0,
               itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const MenuDetail(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(5),
-                    width: 210,
-                    height: 170,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF8F8F8),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 95,
-                          height: 110,
-                          child: Image.asset('assets/images/products/${products[index].photo}'),
-                        ),
-                        Text(
-                          products[index].name,
-                          style: const TextStyle(fontFamily: 'Oswald', fontSize: 14, fontWeight: FontWeight.w300, color: Color(0xff222222)),
-                        ),
-                        Text(
-                          NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(products[index].price),
-                          style: const TextStyle(
-                            fontFamily: 'Oswald',
-                            fontSize: 14,
-                            color: Color(0xffFB9116),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
+                return productCard(context, products[index]);
               },
             ),
           ),
@@ -212,6 +182,50 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ],
+    );
+  }
+
+  productCard(BuildContext context, Product product) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => MenuDetail(id: product.id),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.all(5),
+        width: 210,
+        height: 170,
+        decoration: BoxDecoration(
+          color: const Color(0xffF8F8F8),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              width: 95,
+              height: 110,
+              child: Image.asset('assets/images/products/${product.photo}'),
+            ),
+            Text(
+              product.name,
+              style: const TextStyle(fontFamily: 'Oswald', fontSize: 14, fontWeight: FontWeight.w300, color: Color(0xff222222)),
+            ),
+            Text(
+              NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(product.price),
+              style: const TextStyle(
+                fontFamily: 'Oswald',
+                fontSize: 14,
+                color: Color(0xffFB9116),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

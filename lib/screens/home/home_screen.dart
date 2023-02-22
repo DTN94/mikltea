@@ -263,8 +263,7 @@ class _HomeViewState extends State<HomeView> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: products.length,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   margin: const EdgeInsets.all(5),

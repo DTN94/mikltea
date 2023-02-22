@@ -121,8 +121,7 @@ class _CartDetailState extends State<CartDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            const Text('Tổng tạm tính',
-                                style: TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff525252))),
+                            const Text('Tổng tạm tính', style: TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff525252))),
                             const Text('147.000đ', style: TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300)),
                           ],
                         ),
@@ -131,8 +130,7 @@ class _CartDetailState extends State<CartDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            const Text('Khuyến mãi',
-                                style: TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff525252))),
+                            const Text('Khuyến mãi', style: TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300, color: Color(0xff525252))),
                             const Text('0đ', style: TextStyle(fontFamily: 'Oswald', fontSize: 15, fontWeight: FontWeight.w300)),
                           ],
                         ),

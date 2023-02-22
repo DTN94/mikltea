@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mikltea/screens/account/tai_khoan.dart';
-import 'package:mikltea/screens/cart_detail/cart_detail.dart';
+import 'package:mikltea/screens/cart/cart_detail_screen.dart';
+import 'package:mikltea/screens/cart/cart_screen.dart';
 
 import 'home/home_screen.dart';
 import 'menu/menu_screen.dart';
@@ -17,7 +18,7 @@ class _IndexState extends State<Index> {
   static const List<Widget> _widgetOptions = [
     Home(),
     Menu(),
-    CartDetail(),
+    Cart(),
     TaiKhoan(),
   ];
 

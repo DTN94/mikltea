@@ -54,8 +54,7 @@ class _LoginState extends State<Login> {
                     labelText: 'Email hoặc số điện thoại',
                     hintText: 'Nhập Email hoặc số điện thoại',
                     labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                    hintStyle:
-                        const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -76,8 +75,7 @@ class _LoginState extends State<Login> {
                     labelText: 'Password',
                     hintText: 'Nhập Password',
                     labelStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff727272), fontWeight: FontWeight.w300),
-                    hintStyle:
-                        const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
+                    hintStyle: const TextStyle(fontFamily: 'Oswald', fontSize: 13, color: Color.fromARGB(174, 114, 114, 114), fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -147,8 +145,7 @@ class _LoginState extends State<Login> {
                     child: Container(
                       width: 70,
                       height: 50,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(15.0), border: Border.all(color: const Color(0xffEBEBEB), width: 1)),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0), border: Border.all(color: const Color(0xffEBEBEB), width: 1)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20.0),
                         child: SvgPicture.asset(
@@ -176,8 +173,7 @@ class _LoginState extends State<Login> {
                     child: Container(
                       width: 70,
                       height: 50,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(15.0), border: Border.all(color: const Color(0xffEBEBEB), width: 1)),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0), border: Border.all(color: const Color(0xffEBEBEB), width: 1)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20.0),
                         child: SvgPicture.asset(

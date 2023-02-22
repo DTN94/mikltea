@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
+
+import '../../../models/product_model.dart';
 
 class ProductDetail extends StatefulWidget {
-  const ProductDetail({Key? key}) : super(key: key);
+  final int item;
+  const ProductDetail({Key? key, required this.item}) : super(key: key);
+
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
+
+
 }
 
-class _ProductDetailState extends State<ProductDetail>
-    with TickerProviderStateMixin {
-  final List<String> imageList = [
-    "assets/images/slide1.jpg",
-    "assets/images/slide2.jpg",
-    "assets/images/slide3.jpg",
-  ];
-
+class _ProductDetailState extends State<ProductDetail> with TickerProviderStateMixin {
   late TabController tabController;
+  int _counter = 0;
+  final int _counterStar = 1;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+  void _incrementCounterMinus() {
+    if(_counter > _counterStar){
+      setState(() {
+        _counter--;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -30,8 +45,14 @@ class _ProductDetailState extends State<ProductDetail>
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    var infoProduct = Product.DetailProduct(widget.item);
+    String? productDetailPhoto = infoProduct?.photo;
+    final List<String?> listSlide = [
+      productDetailPhoto,
+    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -46,13 +67,13 @@ class _ProductDetailState extends State<ProductDetail>
         child: Column(
           children: [
             GFCarousel(
-              items: imageList.map(
-                (url) {
+              items: listSlide.map(
+                    (url) {
                   return Container(
                     margin: const EdgeInsets.all(0),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(0)),
-                      child: Image.asset(url, fit: BoxFit.cover, width: 1000.0),
+                      child: Image.asset("assets/images/${url!}", fit: BoxFit.cover, width: 1000.0),
                     ),
                   );
                 },
@@ -69,18 +90,19 @@ class _ProductDetailState extends State<ProductDetail>
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
-                              "Sữa Tươi Trân Chân Đường Đen",
-                              style: TextStyle(
+                              infoProduct!.name,
+                              style: const TextStyle(
                                   fontFamily: 'Oswald',
                                   color: Color(0xff222222),
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
-                              "49.000đ",
-                              style: TextStyle(
+                              NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0)
+                                  .format(infoProduct!.price),
+                              style: const TextStyle(
                                   fontFamily: 'Oswald',
                                   color: Color(0xffFB9116),
                                   fontSize: 25,
@@ -99,6 +121,7 @@ class _ProductDetailState extends State<ProductDetail>
                     tabBarColor: Colors.transparent,
                     controller: tabController,
                     isScrollable: false,
+                    indicatorSize: TabBarIndicatorSize.tab,
                     indicatorColor: const Color(0xffFB9116),
                     indicatorPadding: const EdgeInsets.all(0),
                     labelColor: const Color(0xffFB9116),
@@ -173,49 +196,9 @@ class _ProductDetailState extends State<ProductDetail>
                           alignment: Alignment.center,
                         ),
                         onPressed: () {},
-                        child: const Text(
-                          'S',
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w300,
-                              color: Color(0xffFB9116)),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          elevation: 0,
-                          padding: const EdgeInsets.only(
-                              top: 4.0, bottom: 4.0, right: 8.0, left: 8.0),
-                          minimumSize: const Size(25, 10),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          alignment: Alignment.center,
-                        ),
-                        onPressed: () {},
-                        child: const Text(
-                          'M',
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w300,
-                              color: Color(0xffFB9116)),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          elevation: 0,
-                          padding: const EdgeInsets.only(
-                              top: 4.0, bottom: 4.0, right: 8.0, left: 8.0),
-                          minimumSize: const Size(25, 10),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          alignment: Alignment.center,
-                        ),
-                        onPressed: () {},
-                        child: const Text(
-                          'L',
-                          style: TextStyle(
+                        child: Text(
+                          infoProduct!.size,
+                          style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w300,
                               color: Color(0xffFB9116)),
@@ -226,61 +209,60 @@ class _ProductDetailState extends State<ProductDetail>
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     ElevatedButton(
-                       style: ElevatedButton.styleFrom(
-                         primary: Colors.white,
-                         shadowColor: Colors.white,
-                         minimumSize: const Size(40, 40),
-                         side: const BorderSide(color: Color(0xffFB9116), width: 1.0, style: BorderStyle.solid),
-                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-                         alignment: Alignment.center,
-                       ),
-                       onPressed: () {},
-                       child: const Text(
-                         '-',
-                         style: TextStyle(
-                             fontSize: 20,
-                             fontWeight: FontWeight.w300,
-                             color: Color(0xffFB9116)),
-                       ),
-                     ),
-                     Container(
-                       width: 40,
-                       height: 40,
-                       margin: const EdgeInsets.only(left: 10,right: 10,top: 5),
-                       child: TextField(
-                         textAlign: TextAlign.center,
-                         textAlignVertical: TextAlignVertical.center,
-                         decoration: InputDecoration(
-                           border: OutlineInputBorder(
-                               borderRadius: BorderRadius.circular(5),
-                           ),
-                           labelText: '0',
-                         ),
-                         style: const TextStyle(fontSize: 20),
-                       )
-                     ),
-                     ElevatedButton(
-                       style: ElevatedButton.styleFrom(
-                         primary: Colors.white,
-                         shadowColor: Colors.white,
-                         minimumSize: const Size(40, 40),
-                         side: const BorderSide(color: Color(0xffFB9116), width: 1.0, style: BorderStyle.solid),
-                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-                         alignment: Alignment.center,
-                       ),
-                       onPressed: () {},
-                       child: const Text(
-                         '+',
-                         style: TextStyle(
-                             fontSize: 20,
-                             fontWeight: FontWeight.w300,
-                             color: Color(0xffFB9116)),
-                       ),
-                     ),
-                   ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          shadowColor: Colors.white,
+                          minimumSize: const Size(40, 40),
+                          side: const BorderSide(color: Color(0xffFB9116), width: 1.0, style: BorderStyle.solid),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                          alignment: Alignment.center,
+                        ),
+                        onPressed: _incrementCounterMinus,
+                        child: const Text(
+                          '-',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xffFB9116)),
+                        ),
+                      ),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        margin: const EdgeInsets.only(left: 10,right: 10,top: 5),
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+                            hintText: '$_counter',
+                            contentPadding: const EdgeInsets.only(top: 5),
+                          ),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          shadowColor: Colors.white,
+                          minimumSize: const Size(40, 40),
+                          side: const BorderSide(color: Color(0xffFB9116), width: 1.0, style: BorderStyle.solid),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                          alignment: Alignment.center,
+                        ),
+                        onPressed: _incrementCounter,
+                        child: const Text(
+                          '+',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xffFB9116)),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 15),
                   Row(

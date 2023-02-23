@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:animations/animations.dart';
+import 'package:mikltea/constants/api_constant.dart';
 import 'package:mikltea/screens/cart/screens/cart_screen.dart';
 import 'package:mikltea/screens/product/screens/product_detail_screen.dart';
-import 'package:mikltea/screens/product/screens/product_detail_screen.dart';
-import 'package:mikltea/screens/product/widgets/productwidget.dart';
-import '../../../models/product_model.dart';
+import '../../../models/api_product_model.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -17,13 +16,16 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
+  late Future<List<ApiProduct>> listProduct;
   int indexTab = 0;
+  var transitionType = ContainerTransitionType.fade;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
     tabController.addListener(_handleTabController);
+    listProduct = ApiConstants.getProduct();
   }
 
   _handleTabController() {
@@ -40,36 +42,6 @@ class _ProductScreenState extends State<ProductScreen>
     super.dispose();
   }
 
-  List<Product> iproduct = [
-    Product(
-        id: 1,
-        name: "Trà Xoài Kem Cheese",
-        photo: "sp1.png",
-        size: "M",
-        price: 49000,
-        quantity: 1),
-    Product(
-        id: 2,
-        name: "Trà Trái Cây Nhiệt Đới",
-        photo: "sp2.png",
-        size: "M",
-        price: 45000,
-        quantity: 1),
-    Product(
-        id: 3,
-        name: "Sữa Tươi Trân Chân Đường Đen",
-        photo: "sp2.png",
-        size: "L",
-        price: 42000,
-        quantity: 1),
-    Product(
-        id: 4,
-        name: "Trà Vãi",
-        photo: "sp1.png",
-        size: "L",
-        price: 42000,
-        quantity: 1),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +97,9 @@ class _ProductScreenState extends State<ProductScreen>
                           fontSize: 15,
                           fontFamily: 'Oswald',
                           fontWeight: FontWeight.w400,
-                          color:
-                              indexTab == 0 ? Colors.white : const Color(0xff222222)),
+                          color: indexTab == 0
+                              ? Colors.white
+                              : const Color(0xff222222)),
                     ),
                   )),
                   Tab(
@@ -149,8 +122,9 @@ class _ProductScreenState extends State<ProductScreen>
                           fontSize: 15,
                           fontFamily: 'Oswald',
                           fontWeight: FontWeight.w400,
-                          color:
-                              indexTab == 1 ? Colors.white : const Color(0xff222222)),
+                          color: indexTab == 1
+                              ? Colors.white
+                              : const Color(0xff222222)),
                     ),
                   )),
                   Tab(
@@ -173,8 +147,9 @@ class _ProductScreenState extends State<ProductScreen>
                           fontSize: 15,
                           fontFamily: 'Oswald',
                           fontWeight: FontWeight.w400,
-                          color:
-                              indexTab == 2 ? Colors.white : const Color(0xff222222)),
+                          color: indexTab == 2
+                              ? Colors.white
+                              : const Color(0xff222222)),
                     ),
                   )),
                 ],
@@ -184,9 +159,80 @@ class _ProductScreenState extends State<ProductScreen>
                 child: TabBarView(
                   controller: tabController,
                   children: [
-                    GridProduct(item: iproduct),
-                    GridProduct(item: iproduct),
-                    GridProduct(item: iproduct),
+                    FutureBuilder<List<ApiProduct>>(
+                      future: listProduct,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 200,
+                                childAspectRatio:0.8,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10),
+                            itemCount: snapshot.data?.length,
+                            itemBuilder: (context, index) => OpenContainer(
+                              closedColor: Colors.white,
+                              closedElevation: 0,
+                              transitionType: transitionType,
+                              transitionDuration: const Duration(seconds: 1),
+                              openBuilder: (context, _) => ProductDetail(item: snapshot.data?[index].id),
+                              closedBuilder: (context, action) {
+                                return Container(
+
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                child: Card(
+                                  color: const Color(0xfff8f8f8),
+                                  elevation: 0,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                            snapshot.data![index].images![0].toString(),fit: BoxFit.cover,
+                                          width: 200,
+                                          height: 150,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(top: 10,bottom: 5),
+                                        child: Text(snapshot.data![index].title.toString(),
+                                          style: const TextStyle(
+                                              fontFamily: 'Oswald',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xff222222)),maxLines: 1,overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Text(
+                                        NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0)
+                                            .format(snapshot.data![index].price),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'Oswald',
+                                            color: Color(0xffFB9116),
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                );
+                              },
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Center(child: Text('Error'),);
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(
+                              backgroundColor: Colors.cyanAccent),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -198,33 +244,4 @@ class _ProductScreenState extends State<ProductScreen>
   }
 }
 
-class GridProduct extends StatelessWidget {
-  final List<Product> item;
 
-  const GridProduct({super.key, required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    const transitionType = ContainerTransitionType.fade;
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200,
-          childAspectRatio: 1,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10),
-      itemCount: item.length,
-      itemBuilder: (context, index) => OpenContainer(
-        closedColor: Colors.white,
-        closedElevation: 0,
-        transitionType: transitionType,
-        transitionDuration: const Duration(seconds: 1),
-        openBuilder: (context, _) => ProductDetail(item: item[index].id),
-        closedBuilder: (context, VoidCallback openContainer) => ProductWidget(
-          index: index,
-          onClicked: openContainer,
-          item: item,
-        ),
-      ),
-    );
-  }
-}

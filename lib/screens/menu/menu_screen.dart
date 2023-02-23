@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mikltea/screens/menu/menu_detail_screen.dart';
 
+import '../../controllers/category.dart';
+import '../../controllers/product.dart';
+import '../../models/category.dart';
 import '../../models/product.dart';
-import '../../models/product_list.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -12,23 +15,24 @@ class Menu extends StatefulWidget {
   State<Menu> createState() => _MenuState();
 }
 
-List<LProduct> lproduct = [];
-
 class _MenuState extends State<Menu> with TickerProviderStateMixin {
+  late Future<List<Category>> _categoryList;
+
   late TabController _tabController;
   int _selectedTab = 0;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: LProduct.getProductLists().length);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        setState(() {
-          _selectedTab = _tabController.index;
-        });
-      }
-    });
+    _categoryList = fetchCategory();
+    _tabController = TabController(vsync: this, length: 6, initialIndex: 0);
+    // _tabController.addListener(() {
+    //   if (_tabController.indexIsChanging) {
+    //     setState(() {
+    //       _selectedTab = _tabController.index;
+    //     });
+    //   }
+    // });
   }
 
   @override
@@ -39,57 +43,85 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    lproduct = LProduct.getProductLists();
-
     return Scaffold(
       appBar: appBar(context),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: TabBar(
-                overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                controller: _tabController,
-                indicatorColor: Colors.transparent,
-                padding: EdgeInsets.zero,
-                indicatorPadding: EdgeInsets.zero,
-                labelPadding: const EdgeInsets.only(right: 10),
-                indicatorWeight: 4,
-                tabs: lproduct.map((var e) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    decoration: BoxDecoration(
-                      border: _selectedTab == lproduct.indexOf(e) ? Border.all(color: Colors.white, width: 0) : Border.all(color: const Color(0xff757575), width: 1),
-                      borderRadius: BorderRadius.circular(50),
-                      color: _selectedTab == lproduct.indexOf(e) ? const Color(0xffFB9116) : Colors.white,
+      body: Material(
+        child: FutureBuilder<List<Category>>(
+          future: _categoryList,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return Text(snapshot.error.toString());
+            if (!snapshot.hasData) return const CircularProgressIndicator();
+
+            if (snapshot.hasData) {
+              _tabController = TabController(vsync: this, length: snapshot.data!.length);
+              // _tabController.addListener(() {
+              //   if (_tabController.indexIsChanging) {
+              //     setState(() {
+              //       _selectedTab = _tabController.index;
+              //     });
+              //   }
+              // });
+            }
+            print('tAb:' + _selectedTab.toString());
+
+            return Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TabBar(
+                            overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                            isScrollable: true,
+                            dividerColor: Colors.transparent,
+                            controller: _tabController,
+                            indicatorColor: Colors.transparent,
+                            padding: EdgeInsets.zero,
+                            indicatorPadding: EdgeInsets.zero,
+                            labelPadding: const EdgeInsets.only(right: 10),
+                            indicatorWeight: 4,
+                            tabs: snapshot.data!.map((var e) {
+                              //print(snapshot.data!.indexOf(e));
+                              return Container(
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                decoration: BoxDecoration(
+                                  border: _selectedTab == snapshot.data!.indexOf(e) ? Border.all(color: Colors.white, width: 0) : Border.all(color: const Color(0xff757575), width: 1),
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: _selectedTab == snapshot.data!.indexOf(e) ? const Color(0xffFB9116) : Colors.white,
+                                ),
+                                child: Text(
+                                  e.name,
+                                  style: TextStyle(
+                                    fontFamily: 'Oswald',
+                                    fontSize: 16,
+                                    color: _selectedTab == snapshot.data!.indexOf(e) ? Colors.white : const Color(0xff171717),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: snapshot.data!.map((var e) {
+                              print(e.id);
+                              return MenuView(id_list: e.id);
+                            }).toList(),
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      e.name,
-                      style: TextStyle(
-                        fontFamily: 'Oswald',
-                        fontSize: 16,
-                        color: _selectedTab == lproduct.indexOf(e) ? Colors.white : const Color(0xff171717),
-                      ),
-                    ),
-                  );
-                }).toList(),
+                  ),
+                ],
               ),
-            ),
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: lproduct.map((var e) {
-                return MenuView(id_list: e.id);
-              }).toList(),
-            ),
-          ),
-          const SizedBox(height: 30)
-        ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -128,17 +160,22 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
 
 class MenuView extends StatelessWidget {
   // ignore: non_constant_identifier_names
-  const MenuView({Key? key, required this.id_list}) : super(key: key);
+  MenuView({Key? key, required this.id_list}) : super(key: key);
   // ignore: non_constant_identifier_names
   final int id_list;
+
+  final Future<List<Product>> _productList = fetchProduct();
+
   @override
   Widget build(BuildContext context) {
+    print('id:' + id_list.toString());
     return SingleChildScrollView(
       child: FutureBuilder<List<Product>>(
-        future: Product.getByListAsync(id_list),
+        future: _productList,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return buildColumn(snapshot.data!, context);
+            List<Product> visibleWidgets = snapshot.data!.where((idCategory) => idCategory.category.id == id_list).toList();
+            return buildColumn(visibleWidgets, context);
           } else {
             return const Center(child: CircularProgressIndicator());
           }
@@ -147,27 +184,24 @@ class MenuView extends StatelessWidget {
     );
   }
 
-  Column buildColumn(List<Product> products, BuildContext context) {
+  buildColumn(List<Product> products, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 15),
-        Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
-          child: SizedBox(
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
-              itemCount: (products.isNotEmpty) ? products.length : 0,
-              itemBuilder: (BuildContext context, int index) {
-                return productCard(context, products[index]);
-              },
-            ),
+        SizedBox(
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
+            itemCount: (products.isNotEmpty) ? products.length : 0,
+            itemBuilder: (BuildContext context, int index) {
+              return productCard(context, products[index]);
+            },
           ),
         ),
         const SizedBox(height: 30),
-        SizedBox(
+        /* SizedBox(
           width: 180,
           height: 40,
           child: ElevatedButton(
@@ -180,7 +214,7 @@ class MenuView extends StatelessWidget {
             ),
             child: const Text('Xem Thêm', style: TextStyle(fontFamily: 'Oswald', fontSize: 16, color: Colors.white, fontWeight: FontWeight.w300)),
           ),
-        ),
+        ), */
       ],
     );
   }
@@ -209,10 +243,19 @@ class MenuView extends StatelessWidget {
             SizedBox(
               width: 95,
               height: 110,
-              child: Image.asset('assets/images/products/${product.photo}'),
+              child: CachedNetworkImage(
+                imageUrl: (Uri.tryParse(product.images.first)!.hasAbsolutePath == true) ? product.images.first : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
+                placeholder: (context, url) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [CircularProgressIndicator()],
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.fill,
+              ),
             ),
             Text(
-              product.name,
+              product.title,
               style: const TextStyle(fontFamily: 'Oswald', fontSize: 14, fontWeight: FontWeight.w300, color: Color(0xff222222)),
             ),
             Text(

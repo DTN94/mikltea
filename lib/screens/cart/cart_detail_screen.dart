@@ -14,7 +14,7 @@ class _CartDetailState extends State<CartDetail> {
   List<Product> products = [];
 
   void _getProducts() {
-    products = Product.getProducts();
+    products = [];
   }
 
   var payments = [
@@ -241,17 +241,17 @@ class _CartDetailState extends State<CartDetail> {
                     maxWidth: 60,
                     maxHeight: 60,
                   ),
-                  child: Image.asset(
+                  /* child: Image.asset(
                     'assets/images/products/${products[index].photo}',
                     fit: BoxFit.contain,
-                  ),
+                  ), */
                 ),
                 const SizedBox(width: 15),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    /* Text(
                       products[index].name,
                       style: const TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff222222)),
                     ),
@@ -262,7 +262,7 @@ class _CartDetailState extends State<CartDetail> {
                     Text(
                       '${products[index].price}đ x1',
                       style: const TextStyle(fontFamily: 'Oswald', fontWeight: FontWeight.w300, fontSize: 14, color: Color(0xff222222)),
-                    ),
+                    ), */
                   ],
                 )
               ],

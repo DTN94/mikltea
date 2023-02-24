@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mikltea/screens/account/screens/login_screen.dart';
 import 'package:mikltea/screens/product/screens/product_screen.dart';
 
 import 'order/screens/order_screen.dart';
@@ -14,10 +15,7 @@ class _IndexState extends State<Index> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = [
-    Text(
-      'Home',
-      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-    ),
+    Login(),
     ProductScreen(),
     Order(),
     Text(

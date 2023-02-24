@@ -46,7 +46,6 @@ class ApiProduct {
     return data;
   }
 }
-
 class Category {
   int? id;
   String? name;

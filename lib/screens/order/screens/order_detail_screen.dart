@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../constants/api_product_constant.dart';
+import '../../../models/api_product_model.dart';
 import '../../../models/order_models.dart';
 import '../../../models/product_model.dart';
 
@@ -22,29 +24,7 @@ class _OrderDetailState extends State<OrderDetail> {
         "Đường Điện Biên Phủ, Phường 22, Quận Bình Thạnh, HCM",
         "Sữa tươi trân châu đường đen (x1), Trà Xoài Kem Cheese (x1), Trà trái cây nhiệt đới (x1)",
         147000);
-    List<Product> iproduct = [
-      Product(
-          id: 1,
-          name: "Trà Xoài Kem Cheese",
-          photo: "item1.png",
-          size: "M",
-          price: 49000,
-          quantity: 1),
-      Product(
-          id: 2,
-          name: "Trà Trái Cây Nhiệt Đới",
-          photo: "item2.png",
-          size: "M",
-          price: 45000,
-          quantity: 1),
-      Product(
-          id: 3,
-          name: "Tươi Trân Chân Đường Đen",
-          photo: "item3.png",
-          size: "L",
-          price: 42000,
-          quantity: 1),
-    ];
+    late Future<List<ApiProduct>> listCart = ApiConstants.getListCart();
 
     return Scaffold(
       appBar: AppBar(
@@ -303,7 +283,113 @@ class _OrderDetailState extends State<OrderDetail> {
                       textAlign: TextAlign.start,
                     ),
                   ),
-                  ListProduct(item_product: iproduct),
+                  FutureBuilder<List<ApiProduct>>(
+                    future: listCart,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Image.network(
+                                            snapshot.data![index].images![0]
+                                                .toString(),
+                                            fit: BoxFit.cover,
+                                            width: 55,
+                                            height: 55,
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 10,
+                                              top: 0,
+                                              right: 0,
+                                              bottom: 0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                snapshot.data![index].title
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontFamily: 'Oswald',
+                                                    color: Color(0xff222222),
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              const Text(
+                                                "Size: M",
+                                                style: TextStyle(
+                                                    fontFamily: 'Oswald',
+                                                    color: Color(0xff6C6C6C),
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                              ),
+                                              Text(
+                                                "${NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(snapshot.data![index].price)} x1",
+                                                style: const TextStyle(
+                                                    fontFamily: 'Oswald',
+                                                    color: Color(0xff222222),
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 0,
+                                          top: 10,
+                                          right: 0,
+                                          bottom: 10),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 0.5,
+                                              color: const Color(0xffEBEBF0),
+                                              strokeAlign: BorderSide
+                                                  .strokeAlignCenter)),
+                                    ),
+                                  ],
+                                );
+                              }),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('Error'),
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(
+                            backgroundColor: Colors.cyanAccent),
+                      );
+                    },
+                  ),
                   Container(
                     margin: const EdgeInsets.only(
                         top: 20, left: 0, bottom: 10, right: 0),
@@ -447,88 +533,6 @@ class _OrderDetailState extends State<OrderDetail> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ListProduct extends StatelessWidget {
-  final List<Product> item_product;
-
-  const ListProduct({super.key, required this.item_product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: item_product.length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      child: Image.asset(
-                        "assets/images/${item_product[index].photo}",
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 10, top: 0, right: 0, bottom: 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item_product[index].name,
-                            style: const TextStyle(
-                                fontFamily: 'Oswald',
-                                color: Color(0xff222222),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          Text(
-                            "Size: ${item_product[index].size}",
-                            style: const TextStyle(
-                                fontFamily: 'Oswald',
-                                color: Color(0xff6C6C6C),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w300),
-                          ),
-                          Text(
-                            "${NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(item_product[index].price)} x${item_product[index].quantity}",
-                            style: const TextStyle(
-                                fontFamily: 'Oswald',
-                                color: Color(0xff222222),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w300),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                      left: 0, top: 10, right: 0, bottom: 10),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 0.5,
-                          color: const Color(0xffEBEBF0),
-                          strokeAlign: BorderSide.strokeAlignCenter)),
-                ),
-              ],
-            );
-          }),
     );
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mikltea/screens/home/screens/home_screen.dart';
-import 'package:mikltea/screens/viewDemo/view_demo_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+
+import 'screens/product/screens/home_screens.dart';
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: "Oswald-Regular"
       ),
-      home: ViewDemoScreen(),
+      home: HomePageProduct(),
     );
   }
 }

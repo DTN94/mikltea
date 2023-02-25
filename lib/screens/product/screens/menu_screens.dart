@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:mikltea/screens/product/widgets/product_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MenuProduct extends StatefulWidget {
+import '../model/categories_dio.dart';
+import '../model/categories_model.dart';
+import '../model/product_model.dart';
+import '../widgets/product_widget.dart';
+
+class MenuProduct extends ConsumerStatefulWidget {
   const MenuProduct({Key? key}) : super(key: key);
 
   @override
-  State<MenuProduct> createState() => _MenuProductState();
+  _MenuProductState createState() => _MenuProductState();
 }
 
-class _MenuProductState extends State<MenuProduct> with TickerProviderStateMixin{
+class _MenuProductState extends ConsumerState<MenuProduct> with TickerProviderStateMixin{
 
   late TabController tabController;
   int indexTab = 0;
+
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 1, vsync: this,initialIndex: indexTab);
     tabController.addListener(_handleTabController);
   }
   _handleTabController(){
@@ -34,140 +39,229 @@ class _MenuProductState extends State<MenuProduct> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final categories = ref.watch(futureListCategoryProvider);
     return Scaffold(
       appBar:AppBar(
         backgroundColor: Color(0xFFFFFFFF),
         elevation: 0,
-        leadingWidth: 50,
-        leading:Center(
-          child: Container(
-            margin: EdgeInsets.only(left: 20),
-            width: 30,
-            height: 30,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(500),
-              child: Image.asset('assets/images/avatar.jpg',fit: BoxFit.cover),
-            ),
-          ),
-        ),
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Menu',style: TextStyle(fontSize: 18,fontFamily: 'Oswald-Medium', color: Colors.black),),
-            ElevatedButton(
-                onPressed: null,
-                child: IconButton(onPressed: null, icon: Icon(Icons.shopping_bag, size: 20)),
-            ),
+            Text('Menu',style: TextStyle(fontSize: 18, color: Colors.black),),
+            IconButton(onPressed: null, icon: Icon(Icons.shopping_bag, size: 25,),padding: new EdgeInsets.all(5),)
           ],
         ),
       ) ,
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(right: 20,bottom: 20,left: 20),
+          color: Colors.white,
           child: Column(
             children: [
-              GFTabBar(
-                length: 3,
-                tabBarColor: Colors.transparent,
-                controller: tabController,
-                isScrollable: true,
-                tabBarHeight: 36,
-                labelColor: Colors.black,
-                indicator: BoxDecoration(
-                  color: Color(0xffFB9116),
-                  borderRadius: BorderRadius.circular(500),
-                ),
-                // labelStyle: ,
-                tabs: [
-                  Tab(
-                    child: Text('Trà Sữa',
-                      style: TextStyle(fontSize: 14,fontFamily: 'Oswald-Medium', color: indexTab == 0? Colors.white:Colors.black),
-                    ),
-                  ),
-                  Tab(
-                    child: Text('Trà Trái cây',
-                      style: TextStyle(fontSize: 14,fontFamily: 'Oswald-Medium', color: indexTab == 1? Colors.white:Colors.black),
-                    ),
-                  ),
-                  Tab(
-                    child: Text('Nước ép',
-                      style: TextStyle(fontSize: 14,fontFamily: 'Oswald-Medium', color: indexTab == 2? Colors.white:Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              IndexedStack(
-                index: indexTab,
-                children: [
-                  Visibility(
-                    visible: true,
-                      child: GridView.count(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        crossAxisCount: 2,
-                        childAspectRatio: 1.0,
-                        children: [
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
-                          ItemProduct(),
+              categories.when(
+                error: (err, stack) => Text('Error: $err'),
+                data: (List<CategoriesModel>? data){
+                  if(data != null){
+                    tabController = TabController(length: data.length, vsync: this,initialIndex: indexTab);
+                    tabController.addListener(_handleTabController);
+                    return TabBar(
+                      controller: tabController,
+                      isScrollable: true,
+                      labelColor: Colors.black,
+                      indicatorColor: Colors.transparent,
+                      labelPadding: EdgeInsets.all(0),
+                      indicatorSize: TabBarIndicatorSize.label,
+                      tabs: [
+                        for(int i = 0;i < data.length;i++)...[
+                          Tab(
+                            iconMargin: EdgeInsets.only(right: 0.0),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 20,right: 20,top: 5,bottom: 5),
+                              margin: EdgeInsets.only(right: 15),
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1,color: indexTab == i? Colors.transparent:Colors.black,),
+                                borderRadius: BorderRadius.circular(50),
+                                color: indexTab == i? Color(0xFFFB9116):Colors.white,
+                              ),
+                              child: Text(data[i].name.toString(),style: TextStyle(fontSize: 14,color: indexTab == i? Colors.white:Colors.black),
+                              ),
+                            ),
+                          )
                         ],
-                      ),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.0,
-                      children: [
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
                       ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.0,
-                      children: [
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                        ItemProduct(),
-                      ],
-                    ),
-                  ),
-                ],
+                    );
+                  }else{
+                    return Container();
+                  }
+                },
+                loading: () =>  Center(child: CircularProgressIndicator()),
               ),
+              SizedBox(height: 10),
+              categories.when(
+                error: (err, stack) => Text('Error: $err'),
+                data: (List<CategoriesModel>? data){
+                  if(data != null){
+                    return IndexedStack(
+                      index: indexTab,
+                      children: [
+                        for(int i = 0;i < data.length;i++)...[
 
+                          Visibility(
+                            visible: true,
+                            child: TabProduct(id: num.parse(data[i].id.toString())),
+                          ),
+                        ],
+                        // Visibility(
+                        //   visible: true,
+                        //   child: GridView.count(
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     shrinkWrap: true,
+                        //     crossAxisCount: 2,
+                        //     childAspectRatio: 1.0,
+                        //     crossAxisSpacing: 5,
+                        //     mainAxisSpacing: 5,
+                        //     children: [
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Visibility(
+                        //   visible: true,
+                        //   child: GridView.count(
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     shrinkWrap: true,
+                        //     crossAxisCount: 2,
+                        //     childAspectRatio: 1.0,
+                        //     crossAxisSpacing: 5,
+                        //     mainAxisSpacing: 5,
+                        //     children: [
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Visibility(
+                        //   visible: true,
+                        //   child: GridView.count(
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     shrinkWrap: true,
+                        //     crossAxisCount: 2,
+                        //     childAspectRatio: 1.0,
+                        //     crossAxisSpacing: 5,
+                        //     mainAxisSpacing: 5,
+                        //     children: [
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Visibility(
+                        //   visible: true,
+                        //   child: GridView.count(
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     shrinkWrap: true,
+                        //     crossAxisCount: 2,
+                        //     childAspectRatio: 1.0,
+                        //     crossAxisSpacing: 5,
+                        //     mainAxisSpacing: 5,
+                        //     children: [
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Visibility(
+                        //   visible: true,
+                        //   child: GridView.count(
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     shrinkWrap: true,
+                        //     crossAxisCount: 2,
+                        //     childAspectRatio: 1.0,
+                        //     crossAxisSpacing: 5,
+                        //     mainAxisSpacing: 5,
+                        //     children: [
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //       // ItemProduct(),
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
+                    );
+                  }else{
+                    return Container();
+                  }
+                },
+                loading: () =>  Center(child: CircularProgressIndicator()),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class TabProduct extends ConsumerWidget {
+  const TabProduct({super.key,required this.id});
+  final num id;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final list_product = ref.watch(futureProductCategoryProvider('$id'));
+    return Column(
+      children: [
+        list_product.when(
+          error: (err, stack) => Text('Error: $err'),
+          data: (List<ProductModel>? data){
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 205,childAspectRatio:0.9),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: data?.length,
+              itemBuilder: (BuildContext context, i) {
+                return ItemProduct(item: data![i]);
+              },
+            );
+          },
+          loading: () => Center(child: const CircularProgressIndicator()),
+        ),
+      ],
     );
   }
 }

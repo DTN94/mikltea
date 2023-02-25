@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:mikltea/screens/product/screens/list1_screens.dart';
 import 'package:mikltea/screens/product/screens/list_screens.dart';
 import 'package:mikltea/screens/product/widgets/product_widget.dart';
 import 'package:mikltea/screens/product/widgets/search_widget.dart';
 
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+import '../model/product_dio.dart';
+import '../model/product_model.dart';
 
-  @override
-  State<ProductScreen> createState() => _ProductScreenState();
 
-}
+
 final List<String> imageList = [
   "assets/images/avatar.jpg",
   "assets/images/product_top.png",
@@ -21,10 +20,14 @@ final List<String> imageList = [
   "assets/images/product_top.png"
 ];
 
-class _ProductScreenState extends State<ProductScreen>{
+
+class ProductScreen extends ConsumerWidget {
+  const ProductScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final list = ref.watch(futureListProductProvider);
+
     return Scaffold(
       appBar:AppBar(
         backgroundColor: Color(0xFFFFFFFF),
@@ -82,7 +85,7 @@ class _ProductScreenState extends State<ProductScreen>{
       ) ,
       body:SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.only(left: 20,right: 20,bottom: 10),
+          padding: const EdgeInsets.only(left: 20,right: 20,bottom: 50),
           color: Color(0xFFFFFFFF),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,21 +165,23 @@ class _ProductScreenState extends State<ProductScreen>{
                 ],
               ),
               SizedBox(height: 20),
-
-              SizedBox(
-                height: 190,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ItemProduct(),
-                    ItemProduct(),
-                    ItemProduct(),
-                    ItemProduct(),
-                    ItemProduct(),
-                  ],
-                ),
+              list.when(
+                error: (err, stack) => Text('Error: $err'),
+                data: (List<ProductModel>? data){
+                  return SizedBox(
+                    height: 200,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      // shrinkWrap: true,
+                      itemCount: 10,
+                      itemBuilder: (BuildContext context, i) {
+                        return ItemProduct(item: data![i]);
+                      },
+                    ),
+                  );
+                },
+                loading: () =>  Center(child: CircularProgressIndicator()),
               ),
-
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,21 +191,20 @@ class _ProductScreenState extends State<ProductScreen>{
                 ],
               ),
               SizedBox(height: 10),
-              GridView.count(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                childAspectRatio: 1.0,
-                children: [
-                  ItemProduct(),
-                  ItemProduct(),
-                  ItemProduct(),
-                  ItemProduct(),
-                  ItemProduct(),
-                  ItemProduct(),
-                  ItemProduct(),
-                  ItemProduct(),
-                ],
+              list.when(
+                error: (err, stack) => Text('Error: $err'),
+                data: (List<ProductModel>? data){
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 205,childAspectRatio:0.9),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: data?.length,
+                    itemBuilder: (BuildContext context, i) {
+                      return ItemProduct(item: data![i]);
+                    },
+                  );
+                },
+                loading: () => Center(child: const CircularProgressIndicator()),
               ),
             ],
           ),

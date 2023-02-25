@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:mikltea/screens/product/screens/menu_screens.dart';
 import 'package:mikltea/screens/product/screens/product_screens.dart';
+import '../../order/screens/order_screens.dart';
 
 class HomePageProduct extends StatefulWidget {
   const HomePageProduct({Key? key}) : super(key: key);
@@ -27,7 +28,6 @@ class _HomePageProductState extends State<HomePageProduct> with TickerProviderSt
       });
     }
   }
-
   @override
   void dispose() {
     tabController.dispose();
@@ -35,6 +35,7 @@ class _HomePageProductState extends State<HomePageProduct> with TickerProviderSt
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: GFTabBarView(controller: tabController, children: <Widget>[
         Container(
@@ -43,7 +44,9 @@ class _HomePageProductState extends State<HomePageProduct> with TickerProviderSt
         Container(
           child: MenuProduct(),
         ),
-        Container(color: Colors.amber),
+        Container(
+          child: OrderPage(),
+        ),
         Container(color: Colors.blue)
       ]),
       bottomNavigationBar: GFTabBar(

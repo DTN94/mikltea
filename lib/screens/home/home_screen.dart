@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -24,12 +22,14 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with TickerProviderStateMixin {
+class _HomeState extends State<Home> {
   late Future<List<Category>> _categoryList;
   late Future<List<Product>> _productList;
 
   int currentPos = 0;
   final CarouselController slideController = CarouselController();
+
+  int _selectedTab = 0;
 
   @override
   void initState() {
@@ -59,42 +59,71 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             FutureBuilder<List<Category>>(
               future: _categoryList,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return SizedBox(
-                    height: 40,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
+                if (snapshot.hasError) return Text(snapshot.error.toString());
+                if (!snapshot.hasData) return const CircularProgressIndicator();
+
+                return Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedTab = index;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              margin: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Center(
+                                child: Text(
+                                  snapshot.data![index].name,
+                                  style: TextStyle(
+                                    fontFamily: 'Oswald',
+                                    fontSize: 16,
+                                    color: _selectedTab == index ? const Color(0xffFB9116) : const Color(0xff171717),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    slideShow(),
+                    const SizedBox(height: 25),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          width: 80,
-                          height: 40,
-                          child: Center(
-                            child: Text(snapshot.data![index].name),
-                          ),
+                      itemBuilder: (context, index) {
+                        return Visibility(
+                          visible: _selectedTab == index,
+                          child: Column(children: [
+                            proNoibat(id_list: snapshot.data![index].id),
+                            const SizedBox(height: 30),
+                            bestSell(id_list: snapshot.data![index].id),
+                          ]),
                         );
                       },
                     ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                }
-                // By default show a loading spinner.
-                return const CircularProgressIndicator();
+                  ],
+                );
               },
             ),
-            slideShow(),
-            const SizedBox(height: 25),
-            proNoibat(),
-            const SizedBox(height: 30),
-            bestSell(),
           ],
         ),
       ),
     );
   }
 
-  Column proNoibat() {
+  Column proNoibat({int? id_list}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -130,11 +159,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           future: _productList,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              List<Product> visibleWidgets = snapshot.data!.where((idCategory) => idCategory.category.id == id_list).toList();
+
               return SizedBox(
                 height: 160,
                 child: ListView.separated(
                   separatorBuilder: (context, index) => const SizedBox(width: 10),
-                  itemCount: snapshot.data!.length,
+                  itemCount: visibleWidgets.length,
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   itemBuilder: (context, index) {
@@ -153,13 +184,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             child: Padding(
                               padding: const EdgeInsets.all(5),
                               child: CachedNetworkImage(
-                                imageUrl: (Uri.tryParse(snapshot.data![index].images.first)!.hasAbsolutePath == true)
-                                    ? snapshot.data![index].images.first
+                                imageUrl: (Uri.tryParse(visibleWidgets[index].images.first)!.hasAbsolutePath == true)
+                                    ? visibleWidgets[index].images.first
                                     : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
-                                placeholder: (context, url) => Column(
-                                  children: [CircularProgressIndicator()],
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator(),
                                 ),
                                 errorWidget: (context, url, error) => const Icon(Icons.error),
                                 fit: BoxFit.fill,
@@ -167,11 +196,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             ),
                           ),
                           Text(
-                            snapshot.data![index].title,
+                            visibleWidgets[index].title,
                             style: const TextStyle(fontFamily: 'Oswald', fontSize: 14, fontWeight: FontWeight.w300, color: Color(0xff222222)),
                           ),
                           Text(
-                            NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(snapshot.data![index].price),
+                            NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(visibleWidgets[index].price),
                             style: const TextStyle(
                               fontFamily: 'Oswald',
                               fontSize: 14,
@@ -195,7 +224,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  Column bestSell() {
+  Column bestSell({required int id_list}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -233,11 +262,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             future: _productList,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                List<Product> visibleWidgets = snapshot.data!.where((idCategory) => idCategory.category.id == id_list).toList();
+
                 return GridView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
+                  itemCount: visibleWidgets.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
@@ -255,24 +286,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             width: 110,
                             height: 110,
                             child: CachedNetworkImage(
-                              imageUrl: (Uri.tryParse(snapshot.data![index].images.first)!.hasAbsolutePath == true)
-                                  ? snapshot.data![index].images.first
+                              imageUrl: (Uri.tryParse(visibleWidgets[index].images.first)!.hasAbsolutePath == true)
+                                  ? visibleWidgets[index].images.first
                                   : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
-                              placeholder: (context, url) => Column(
-                                children: [CircularProgressIndicator()],
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
                               ),
                               errorWidget: (context, url, error) => const Icon(Icons.error),
                               fit: BoxFit.fill,
                             ),
                           ),
                           Text(
-                            snapshot.data![index].title,
+                            visibleWidgets[index].title,
                             style: const TextStyle(fontFamily: 'Oswald', fontSize: 14, fontWeight: FontWeight.w300, color: Color(0xff222222)),
                           ),
                           Text(
-                            NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(snapshot.data![index].price),
+                            NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(visibleWidgets[index].price),
                             style: const TextStyle(
                               fontFamily: 'Oswald',
                               fontSize: 14,

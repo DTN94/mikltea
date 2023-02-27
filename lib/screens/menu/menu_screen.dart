@@ -18,27 +18,12 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> with TickerProviderStateMixin {
   late Future<List<Category>> _categoryList;
 
-  late TabController _tabController;
   int _selectedTab = 0;
 
   @override
   void initState() {
     super.initState();
     _categoryList = fetchCategory();
-    _tabController = TabController(vsync: this, length: 6, initialIndex: 0);
-    // _tabController.addListener(() {
-    //   if (_tabController.indexIsChanging) {
-    //     setState(() {
-    //       _selectedTab = _tabController.index;
-    //     });
-    //   }
-    // });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   @override
@@ -52,69 +37,57 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
             if (snapshot.hasError) return Text(snapshot.error.toString());
             if (!snapshot.hasData) return const CircularProgressIndicator();
 
-            if (snapshot.hasData) {
-              _tabController = TabController(vsync: this, length: snapshot.data!.length);
-              // _tabController.addListener(() {
-              //   if (_tabController.indexIsChanging) {
-              //     setState(() {
-              //       _selectedTab = _tabController.index;
-              //     });
-              //   }
-              // });
-            }
-            print('tAb:' + _selectedTab.toString());
-
             return Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               child: Column(
                 children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedTab = index;
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            margin: const EdgeInsets.all(5),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: _selectedTab == index ? const Color(0xffFB9116) : const Color(0xff757575), width: 1),
+                              borderRadius: BorderRadius.circular(50),
+                              color: _selectedTab == index ? const Color(0xffFB9116) : Colors.white,
+                            ),
+                            child: Center(
+                              child: Text(
+                                snapshot.data![index].name,
+                                style: TextStyle(
+                                  fontFamily: 'Oswald',
+                                  fontSize: 16,
+                                  color: _selectedTab == index ? Colors.white : const Color(0xff171717),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   Expanded(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TabBar(
-                            overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-                            isScrollable: true,
-                            dividerColor: Colors.transparent,
-                            controller: _tabController,
-                            indicatorColor: Colors.transparent,
-                            padding: EdgeInsets.zero,
-                            indicatorPadding: EdgeInsets.zero,
-                            labelPadding: const EdgeInsets.only(right: 10),
-                            indicatorWeight: 4,
-                            tabs: snapshot.data!.map((var e) {
-                              //print(snapshot.data!.indexOf(e));
-                              return Container(
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                decoration: BoxDecoration(
-                                  border: _selectedTab == snapshot.data!.indexOf(e) ? Border.all(color: Colors.white, width: 0) : Border.all(color: const Color(0xff757575), width: 1),
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: _selectedTab == snapshot.data!.indexOf(e) ? const Color(0xffFB9116) : Colors.white,
-                                ),
-                                child: Text(
-                                  e.name,
-                                  style: TextStyle(
-                                    fontFamily: 'Oswald',
-                                    fontSize: 16,
-                                    color: _selectedTab == snapshot.data!.indexOf(e) ? Colors.white : const Color(0xff171717),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: snapshot.data!.map((var e) {
-                              print(e.id);
-                              return MenuView(id_list: e.id);
-                            }).toList(),
-                          ),
-                        ),
-                      ],
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return Visibility(
+                          visible: _selectedTab == index,
+                          child: MenuView(id_list: snapshot.data![index].id),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -168,7 +141,6 @@ class MenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('id:' + id_list.toString());
     return SingleChildScrollView(
       child: FutureBuilder<List<Product>>(
         future: _productList,

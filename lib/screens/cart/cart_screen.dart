@@ -18,7 +18,7 @@ class _CartState extends State<Cart> {
 
   AppBar appBar() {
     return AppBar(
-      title: const Text('Thông tin tài khoản'),
+      title: const Text('Giỏ hàng'),
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: GestureDetector(

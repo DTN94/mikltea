@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../constants/api_user_constant.dart';
-
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -100,7 +98,6 @@ class _LoginState extends State<Login> {
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      UserConstant.LoginUser(_email.text.toString(), _password.text.toString());
                     });
                   },
                   style: ElevatedButton.styleFrom(

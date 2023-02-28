@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
-import '../../../models/order_models.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../constants/order_constant.dart';
+import '../../../models/order_model.dart';
 import '../widgets/order_widgets.dart';
 
-class OrderHistory extends StatefulWidget {
+class OrderHistory extends ConsumerStatefulWidget {
+
   const OrderHistory({Key? key}) : super(key: key);
 
   @override
-  State<OrderHistory> createState() => _OrderHistoryState();
+  _OrderHistory createState() => _OrderHistory();
 
 }
+class _OrderHistory extends ConsumerState<OrderHistory> with TickerProviderStateMixin {
 
-class _OrderHistoryState extends State<OrderHistory> {
+
 
   @override
   Widget build(BuildContext context) {
-    final itemCart = ListOrder(
-        "101",
-        "Đã giao hàng",
-        "30/11/2022",
-        "4:20",
-        "CVPM Quang Trung,P. Tân Chánh Hiệp, Quận 12",
-        "Đường Điện Biên Phủ, Phường 22, Quận Bình Thạnh, HCM",
-        "Sữa tươi trân châu đường đen (x1), Trà Xoài Kem Cheese (x1), Trà trái cây nhiệt đới (x1)",
-        147000);
-
+    final _listOderStatusNew = ref.watch(OrderConstant.futureOrderProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lịch sử đơn hàng",
@@ -34,13 +29,21 @@ class _OrderHistoryState extends State<OrderHistory> {
                 fontWeight: FontWeight.w500)),
       ),
       backgroundColor: const Color(0xffF5F5FA),
-      body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-        OrderWidget(cart:itemCart),
-        OrderWidget(cart:itemCart),
-        OrderWidget(cart:itemCart),
-        OrderWidget(cart:itemCart),
-        OrderWidget(cart:itemCart),
-      ]),
+      body: SingleChildScrollView(
+        child: _listOderStatusNew.when(
+          error: (err, stack) => Text('Error: $err'),
+          data: (List<OrderModel>? data) {
+            return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: data!.length,
+                itemBuilder: (context, index) {
+                  return  OrderWidget(item: data[index]);
+                });
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+        ),
+      ),
     );
   }
 }

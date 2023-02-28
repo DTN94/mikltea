@@ -1,78 +1,79 @@
-class Product {
-  final int id;
-  final String name;
-  final String photo;
-  final String size;
-  final double price;
-  final int quantity;
+class ProductModel {
+  int? id;
+  String? photo;
+  String? name;
+  int? regularPrice;
+  int? salePrice;
+  int? discount;
+  String? desc;
+  String? content;
+  String? idList;
+  List<String>? gallery;
+  Category? category;
 
-  Product(
-      {required this.id,
-      required this.photo,
-      required this.name,
-      required this.size,
-      required this.price,
-      required this.quantity});
+  ProductModel(
+      {this.id,
+        this.photo,
+        this.name,
+        this.regularPrice,
+        this.salePrice,
+        this.discount,
+        this.desc,
+        this.content,
+        this.idList,
+        this.gallery,
+        this.category});
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json['id'],
-        name: json['name'],
-        photo: json['photo'],
-        size: json['size'],
-        price: json['price'],
-        quantity: json['quantity'],
-      );
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'photo': photo,
-        'size': size,
-        'price': price,
-        'quantity': quantity
-      };
-
-  static List<Product> getProducts() {
-    List<Product> products = [
-      Product(
-          id: 1,
-          name: "Trà Xoài Kem Cheese",
-          photo: "slide1.jpg",
-          size: "S",
-          price: 49000,
-          quantity: 1),
-      Product(
-          id: 2,
-          name: "Trà Trái Cây Nhiệt Đới",
-          photo: "slide2.jpg",
-          size: "M",
-          price: 45000,
-          quantity: 1),
-      Product(
-          id: 3,
-          name: "Sữa Tươi Trân Chân Đường Đen",
-          photo: "slide3.jpg",
-          size: "L",
-          price: 42000,
-          quantity: 1),
-      Product(
-          id: 4,
-          name: "Trà Vãi",
-          photo: "slide1.jpg",
-          size: "XL",
-          price: 42000,
-          quantity: 1),
-    ];
-
-    return products;
+  ProductModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    photo = json['photo'];
+    name = json['name'];
+    regularPrice = json['regular_price'];
+    salePrice = json['sale_price'];
+    discount = json['discount'];
+    desc = json['desc'];
+    content = json['content'];
+    idList = json['id_list'];
+    gallery = json['gallery'].cast<String>();
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
   }
 
-  static Product? DetailProduct(int id) {
-    for (var product in getProducts()) {
-      if (product.id == id) {
-        return product;
-      }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['photo'] = this.photo;
+    data['name'] = this.name;
+    data['regular_price'] = this.regularPrice;
+    data['sale_price'] = this.salePrice;
+    data['discount'] = this.discount;
+    data['desc'] = this.desc;
+    data['content'] = this.content;
+    data['id_list'] = this.idList;
+    data['gallery'] = this.gallery;
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
     }
-    return null;
+    return data;
+  }
+}
+
+class Category {
+  String? id;
+  String? namevi;
+
+  Category({this.id, this.namevi});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    namevi = json['namevi'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['namevi'] = this.namevi;
+    return data;
   }
 }

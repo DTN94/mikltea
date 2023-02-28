@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:mikltea/models/order_models.dart';
-import 'package:mikltea/screens/order/screens/order_history_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mikltea/constants/order_constant.dart';
+import 'package:mikltea/models/order_model.dart';
 import 'package:mikltea/screens/order/widgets/order_widgets.dart';
 
 import 'order_empty_screen.dart';
+import 'order_history_screen.dart';
 
-class Order extends StatefulWidget {
+class Order extends ConsumerStatefulWidget {
+
   const Order({Key? key}) : super(key: key);
 
   @override
-  State<Order> createState() => _OrderState();
+  _OrderState createState() => _OrderState();
+
 }
 
-class _OrderState extends State<Order> {
+class _OrderState extends ConsumerState<Order> with TickerProviderStateMixin {
   @override
+
   Widget build(BuildContext context) {
-    final itemCart = ListOrder("");
-    if (itemCart.trangthai.isEmpty) {
-      return OrderEmpty();
-    } else {
-      return Scaffold(
+    final _listOderStatusNew = ref.watch(OrderConstant.futureOrderStatusNewProvider("1"));
+    return Scaffold(
         appBar: AppBar(
           title: const Text("Đơn hàng",
               style: TextStyle(
@@ -31,7 +33,7 @@ class _OrderState extends State<Order> {
             TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => OrderHistory()));
+                    MaterialPageRoute(builder: (context) => const OrderHistory()));
               },
               child: const Text('Lịch sử đặt hàng',
                   style: TextStyle(
@@ -43,10 +45,21 @@ class _OrderState extends State<Order> {
           ],
         ),
         backgroundColor: const Color(0xffF5F5FA),
-        body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-          OrderWidget(cart: itemCart),
-        ]),
+        body: SingleChildScrollView(
+          child: _listOderStatusNew.when(
+            error: (err, stack) => Text('Error: $err'),
+            data: (List<OrderModel>? data) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: data!.length,
+                  itemBuilder: (context, index) {
+                    return  OrderWidget(item: data[index]);
+                  });
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+          ),
+        ),
       );
-    }
   }
 }

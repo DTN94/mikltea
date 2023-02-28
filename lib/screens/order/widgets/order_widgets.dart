@@ -1,19 +1,39 @@
+// ignore_for_file: unrelated_type_equality_checks, prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mikltea/screens/order/screens/order_detail_screen.dart';
-
-
-import '../../../models/order_models.dart';
+import '../../../models/order_model.dart';
 
 class OrderWidget extends StatelessWidget {
-  final ListOrder cart;
-
-  const OrderWidget({Key? key, required this.cart}) : super(key: key);
-
+  final OrderModel item;
+  OrderWidget({Key? key, required this.item}) : super(key: key);
+   var bgStatus;
+   var colorStatus;
   @override
   Widget build(BuildContext context) {
+    var checkColor = item.orderStatus!.classOrder.toString();
+    if (checkColor == "text-primary") {
+      bgStatus = "0xffFFF5EB";
+      colorStatus = "0xffFB9116";
+    }else if (checkColor == "text-info") {
+      bgStatus = "0xffFFF5EB";
+      colorStatus = "0xffFB9116";
+    }else if (checkColor == "text-warning") {
+      bgStatus = "0xffEFFFF4";
+      colorStatus = "0xff00AB56";
+    }else if (checkColor == "text-success") {
+      bgStatus = "0xffEFFFF4";
+      colorStatus = "0xff00AB56";
+    }else {
+      bgStatus = "0xffFFF0F1";
+      colorStatus = "0xffFF424E";
+    }
+    bgStatus = int.parse(bgStatus);
+    colorStatus = int.parse(colorStatus);
+
     return Container(
-      margin: const EdgeInsets.only( left: 0, top: 5, right: 0, bottom: 5),
+      margin: const EdgeInsets.only(left: 0, top: 5, right: 0, bottom: 5),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -22,7 +42,7 @@ class OrderWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const OrderDetail()));
+              MaterialPageRoute(builder: (context) => OrderDetail(id: int.parse(item!.id.toString()), code: item!.code.toString())));
         },
         child: Column(
           children: [
@@ -34,21 +54,20 @@ class OrderWidget extends StatelessWidget {
                   height: 35,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: const Color(0xffEFFFF4),
+                    color: Color(bgStatus),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    cart.trangthai,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    item.orderStatus!.namevi.toString(),
+                    style: TextStyle(
                         fontFamily: 'Oswald',
-                        color: Color(0xff00AB56),
+                        color: Color(colorStatus),
                         fontSize: 13,
                         fontWeight: FontWeight.w400),
                   ),
                 ),
                 const Spacer(),
-                Text("${cart.ngay}, ${cart.gio}",
+                Text(item.dateCreated.toString(),
                     textAlign: TextAlign.right,
                     style: const TextStyle(
                         fontFamily: 'Oswald',
@@ -68,7 +87,7 @@ class OrderWidget extends StatelessWidget {
                   margin: const EdgeInsets.only(
                       left: 10, top: 0, right: 0, bottom: 0),
                   child: Text(
-                    cart.diachicuahang,
+                    item.address.toString(),
                     style: const TextStyle(
                         fontFamily: 'Oswald',
                         color: Color(0xff222222),
@@ -81,7 +100,7 @@ class OrderWidget extends StatelessWidget {
             ),
             Container(
               margin:
-              const EdgeInsets.only(left: 0, top: 10, right: 0, bottom: 5),
+                  const EdgeInsets.only(left: 0, top: 10, right: 0, bottom: 5),
               decoration: BoxDecoration(
                   border: Border.all(
                       width: 0.5,
@@ -99,7 +118,7 @@ class OrderWidget extends StatelessWidget {
                   margin: const EdgeInsets.only(
                       left: 10, top: 0, right: 0, bottom: 0),
                   child: Text(
-                    cart.diachinhan,
+                    item.address.toString(),
                     style: const TextStyle(
                         fontFamily: 'Oswald',
                         color: Color(0xff222222),
@@ -112,12 +131,12 @@ class OrderWidget extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Text(
-                    cart.sanpham,
+                    item.product!.map((var e) => e.name).toString(),
                     style: const TextStyle(
                         fontSize: 13,
                         fontFamily: 'Oswald',
@@ -128,8 +147,9 @@ class OrderWidget extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0)
-                        .format(cart.price),
+                    NumberFormat.simpleCurrency(
+                            locale: 'vi-VN', decimalDigits: 0)
+                        .format(item.totalPrice),
                     style: const TextStyle(
                         fontSize: 14,
                         fontFamily: 'Oswald',

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mikltea/constants/api_product_constant.dart';
+import 'package:mikltea/constants/product_constant.dart';
 import 'package:mikltea/screens/cart/screens/cart_payment_screen.dart';
-import '../../../models/api_product_model.dart';
 import '../../../models/product_model.dart';
 
 class CartScreen extends StatefulWidget {
@@ -13,19 +12,20 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  late Future<List<ApiProduct>> listCart = ApiConstants.getListCart();
+  late Future<List<ProductModel>> listCart = ProductConstants.getListCart();
   int _counter = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Giỏ hàng",
-              style: TextStyle(
-                  fontFamily: 'Oswald',
-                  color: Color(0xff222222),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500),
+          title: const Text(
+            "Giỏ hàng",
+            style: TextStyle(
+                fontFamily: 'Oswald',
+                color: Color(0xff222222),
+                fontSize: 18,
+                fontWeight: FontWeight.w500),
           ),
         ),
         body: Padding(
@@ -35,7 +35,7 @@ class _CartScreenState extends State<CartScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                FutureBuilder<List<ApiProduct>>(
+                FutureBuilder<List<ProductModel>>(
                   future: listCart,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -63,7 +63,7 @@ class _CartScreenState extends State<CartScreen> {
                                           borderRadius:
                                               BorderRadius.circular(20),
                                           child: Image.network(
-                                            snapshot.data![index].images![0]
+                                            snapshot.data![index].photo
                                                 .toString(),
                                             fit: BoxFit.cover,
                                             width: 110,
@@ -81,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Text(
-                                                snapshot.data![index].title
+                                                snapshot.data![index].name
                                                     .toString(),
                                                 style: const TextStyle(
                                                     fontFamily: 'Oswald',
@@ -119,7 +119,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                       0)
                                                           .format(snapshot
                                                               .data![index]
-                                                              .price),
+                                                              .regularPrice),
                                                       style: const TextStyle(
                                                           fontFamily: 'Oswald',
                                                           color:

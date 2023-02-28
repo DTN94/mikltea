@@ -2,33 +2,30 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:mikltea/constants/api_product_constant.dart';
-import 'package:mikltea/models/api_product_model.dart';
+import 'package:mikltea/constants/product_constant.dart';
+import 'package:mikltea/models/product_model.dart';
 
-class ProductDetail extends StatefulWidget {
-  final int item;
+class ProductDetail extends ConsumerStatefulWidget {
+  final int id;
 
-  const ProductDetail({Key? key, required this.item}) : super(key: key);
+  const ProductDetail({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<ProductDetail> createState() => _ProductDetailState();
+  _ProductDetailState createState() => _ProductDetailState();
 }
 
-class _ProductDetailState extends State<ProductDetail>
-    with TickerProviderStateMixin {
+class _ProductDetailState extends ConsumerState<ProductDetail> with TickerProviderStateMixin{
   late TabController tabController;
   int _counter = 0;
   final int _counterStar = 1;
-  late Future<ApiProduct> _productDetail;
-
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
   }
-
   void _incrementCounterMinus() {
     if (_counter > _counterStar) {
       setState(() {
@@ -41,7 +38,6 @@ class _ProductDetailState extends State<ProductDetail>
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
-    _productDetail = ApiConstants.getProductDetail(widget.item);
   }
 
   @override
@@ -52,8 +48,11 @@ class _ProductDetailState extends State<ProductDetail>
   List<String> btnSizes = ['M', 'L'];
   int? _selectedSize;
 
+
   @override
   Widget build(BuildContext context) {
+    final _productDetail = ref.watch(ProductConstants.futureProductDetailProvider(widget.id.toString()));
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -65,13 +64,12 @@ class _ProductDetailState extends State<ProductDetail>
       ),
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
-        child: FutureBuilder<ApiProduct>(
-          future: _productDetail,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
+        child: _productDetail.when(
+            error: (err, stack) => Text('Error: $err'),
+            data: (ProductModel? data){
               return Column(
                 children: [
-                  SlideCarousel(snapshot.data!.images),
+                  SlideCarousel(data!.gallery),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
@@ -81,7 +79,7 @@ class _ProductDetailState extends State<ProductDetail>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              snapshot.data!.title.toString(),
+                              data!.name.toString(),
                               style: const TextStyle(
                                   fontFamily: 'Oswald',
                                   fontSize: 20,
@@ -110,8 +108,8 @@ class _ProductDetailState extends State<ProductDetail>
                           alignment: Alignment.centerLeft,
                           child: Text(
                             NumberFormat.simpleCurrency(
-                                    locale: 'vi-VN', decimalDigits: 0)
-                                .format(snapshot.data!.price),
+                                locale: 'vi-VN', decimalDigits: 0)
+                                .format(data!.regularPrice),
                             style: const TextStyle(
                                 fontSize: 25,
                                 fontFamily: 'Oswald',
@@ -151,11 +149,11 @@ class _ProductDetailState extends State<ProductDetail>
                             controller: tabController,
                             children: [
                               Text(
-                                snapshot.data!.description.toString(),
+                                data!.desc.toString(),
                                 style: const TextStyle(fontFamily: 'Oswald', fontWeight: FontWeight.w300, color: Color(0xff656565), height: 2),
                               ),
                               Text(
-                                snapshot.data!.description.toString(),
+                                data!.content.toString(),
                                 style: const TextStyle(fontFamily: 'Oswald', fontWeight: FontWeight.w300, color: Color(0xff656565), height: 2),
                               ),
                             ],
@@ -263,17 +261,10 @@ class _ProductDetailState extends State<ProductDetail>
                     ),
                   ),
                 ],
-              );
-            } else if (snapshot.hasError) {
-              return const Center(
-                child: Text('Error'),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
+              );;
+            }, loading: () =>  const Center(child: CircularProgressIndicator()),
       ),
+      )
     );
   }
   Widget btnSize({required String text, required int index}) {
@@ -312,12 +303,12 @@ class _ProductDetailState extends State<ProductDetail>
                   children: const [CircularProgressIndicator()],
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
               ),
             )
             .toList(),
         options: CarouselOptions(
-          height: 390,
+          height: 350    ,
           enlargeCenterPage: true,
           autoPlay: true,
           aspectRatio: 16 / 9,

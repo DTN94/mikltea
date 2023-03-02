@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mikltea/screens/account/tai_khoan.dart';
-import 'package:mikltea/screens/cart/cart_detail_screen.dart';
-import 'package:mikltea/screens/cart/cart_screen.dart';
 
 import 'home/home_screen.dart';
 import 'menu/menu_screen.dart';
@@ -15,10 +13,10 @@ class Index extends StatefulWidget {
 class _IndexState extends State<Index> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = [
+  static List<Widget> _widgetOptions = [
     Home(),
     Menu(),
-    Cart(),
+    Text('Text'),
     TaiKhoan(),
   ];
 

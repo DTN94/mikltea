@@ -1,23 +1,36 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/product.dart';
+import 'package:dio/dio.dart';
 
-Future<List<Product>> fetchProduct() async {
-  var url = Uri.parse('https://api.escuelajs.co/api/v1/products?offset=0&limit=200');
-  final response = await http.get(url);
+final dio = Dio();
+
+// ignore: non_constant_identifier_names
+String BASE_URL = "http://demo32.ninavietnam.com.vn/API/ninasource8v5/api/product_api.php";
+
+List<Product> parse(String responseBody) {
+  var list = json.decode(responseBody) as List<dynamic>;
+  List<Product> arr = list.map((e) => Product.fromJson(e)).toList();
+  return arr;
+}
+
+final getProducts = FutureProvider.autoDispose<List<Product>>((ref) async {
+  final response = await dio.get(BASE_URL, queryParameters: {'action': 'list'});
+
   if (response.statusCode == 200) {
-    return (json.decode(response.body) as List).map((e) => Product.fromJson(e)).toList();
+    return parse(response.data);
   } else {
     throw Exception('Unexpected error occured!');
   }
-}
+});
 
-Future<List<Product>> productDetail(int id) async {
-  var url = Uri.parse('https://api.escuelajs.co/api/v1/products/$id');
-  final response = await http.get(url);
+final AutoDisposeFutureProviderFamily<List<Product>, int> productDetail = FutureProvider.autoDispose.family<List<Product>, int>((ref, id) async {
+  final response = await dio.get(BASE_URL, queryParameters: {'action': 'detail', 'id': id});
+
   if (response.statusCode == 200) {
-    return (json.decode('[${response.body}]') as List).map((e) => Product.fromJson(e)).toList();
+    return parse(response.data);
   } else {
     throw Exception('Unexpected error occured!');
   }
-}
+});

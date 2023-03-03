@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:mikltea/screens/product/screens/product_screens.dart';
+import 'package:intl/intl.dart';
 
+import '../../product/provider/cart_provider.dart';
+import '../../product/screens/home_screens.dart';
 import 'cart_screens.dart';
 import 'success_screens.dart';
 
-class PayMentPage extends StatefulWidget {
+class PayMentPage extends ConsumerStatefulWidget {
   const PayMentPage({Key? key}) : super(key: key);
 
   @override
-  State<PayMentPage> createState() => _PayMentPageState();
+  _PayMentPageState createState() => _PayMentPageState();
 }
 
-class _PayMentPageState extends State<PayMentPage> {
+class _PayMentPageState extends ConsumerState<PayMentPage> with TickerProviderStateMixin{
   int groupValue = 0;
 
   @override
   Widget build(BuildContext context) {
+    final cartState = ref.watch(cartProvider);
+    items = cartState.listCarts;
+    num total = 0;
+    for(int i = 0;i < items.length;i++){
+      total += num.parse(items[i].price.toString()) * num.parse(items[i].qty.toString());
+    };
+
     return Scaffold(
       appBar:AppBar(
         backgroundColor: Colors.transparent,
@@ -94,9 +104,9 @@ class _PayMentPageState extends State<PayMentPage> {
                   ),
                 ],
               ),
-              _itemOrder(),
-              _itemOrder(),
-              _itemOrder(),
+              for(int i = 0;i < items.length;i++)...[
+                _itemOrder(items[i]),
+              ],
               SizedBox(height: 20),
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -130,7 +140,7 @@ class _PayMentPageState extends State<PayMentPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Tổng tạm tính',style: TextStyle(fontSize: 14,color: Color(0xFF656565))),
-                  Text('147.000đ',style: TextStyle(fontSize: 14,color: Color(0xFF656565))),
+                  Text(NumberFormat("#,###", "en_US").format(total) + " đ",style: TextStyle(fontSize: 14,color: Color(0xFF656565))),
                 ],
               ),
               SizedBox(height: 10),
@@ -173,7 +183,7 @@ class _PayMentPageState extends State<PayMentPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Tổng cộng',style: TextStyle(fontSize: 15,color: Color(0xFF222222))),
-                Text('147.000đ',style: TextStyle(fontSize: 15,color: Color(0xFF222222))),
+                Text(NumberFormat("#,###", "en_US").format(total) + " đ",style: TextStyle(fontSize: 15,color: Color(0xFF222222))),
               ],
             ),
             SizedBox(height: 15),
@@ -198,7 +208,7 @@ class _PayMentPageState extends State<PayMentPage> {
     );
   }
 
-  Widget _itemOrder(){
+  Widget _itemOrder(itemcart){
     return Container(
       child: Wrap(
         children: [
@@ -218,7 +228,7 @@ class _PayMentPageState extends State<PayMentPage> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       padding: EdgeInsets.all(5),
-                      child: Text('X2',style: TextStyle(fontSize: 16,color: Color(0xFFFB9116)))
+                      child: Text('X'+itemcart.qty.toString(),style: TextStyle(fontSize: 16,color: Color(0xFFFB9116)))
                   ),
                 ),
                 Expanded(
@@ -226,7 +236,7 @@ class _PayMentPageState extends State<PayMentPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Sữa Tươi Trân Chân Đường Đen',style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
+                      Text(itemcart.title.toString(),style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
                       SizedBox(height: 5),
                       Text('Size M',style: TextStyle(fontSize: 14,color: Color(0xFF6C6C6C)),),
                       SizedBox(height: 5),
@@ -243,7 +253,7 @@ class _PayMentPageState extends State<PayMentPage> {
                   ),
                 ),
                 Expanded(
-                  child: Text('49.000đ',style: TextStyle(fontSize: 15,color: Color(0xFF222222)),textAlign: TextAlign.end),
+                  child: Text(NumberFormat("#,###", "en_US").format(itemcart.price * itemcart.qty) + " đ",style: TextStyle(fontSize: 15,color: Color(0xFF222222)),textAlign: TextAlign.end),
                 )
               ],
             ),

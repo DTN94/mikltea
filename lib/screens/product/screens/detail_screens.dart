@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../cart/screens/cart_screens.dart';
-import '../model/detail_dio.dart';
+import '../model/product_dio.dart';
 import '../model/product_model.dart';
+import '../provider/cart_provider.dart';
 
 
 class DetailProduct extends ConsumerStatefulWidget {
@@ -19,6 +22,7 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
   late TabController tabController;
   int indexTab = 0;
   int _counter = 1;
+  int _activeColor = 1;
 
   void _incrementCounter() {
     setState(() { _counter++;});
@@ -27,6 +31,9 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
     setState(() {
       if(_counter > 1){ _counter--; }
     });
+  }
+  void _activeSize(int size) {
+    setState(() { _activeColor = size;});
   }
 
   @override
@@ -52,7 +59,16 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
   @override
   Widget build(BuildContext context) {
     final detail = ref.watch(futureDetailProductProvider(widget.id.toString()));
+    // final cartState = ref.watch(cartProvider);
+    // if(cartState.status == CartStatus.Success){
+    //   _myBox.put( cartState.id_product, [ cartState.id_product, cartState.qty, cartState.price ]);
+    //   // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
+    // }
+    // print(_myBox.get);
+
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar:AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -70,8 +86,6 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
       extendBodyBehindAppBar: true,
       body:SingleChildScrollView(
         child: Container(
-          color: Colors.white,
-          height: 1000,
           child: Column(
             children: [
               detail.when(
@@ -109,8 +123,8 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text((detail?.title).toString(),style: TextStyle(fontSize: 20,color: Colors.black),),
-                                    Text(NumberFormat("#,###", "en_US").format((detail?.price)) +" đ",
+                                    Text((detail.title).toString(),style: TextStyle(fontSize: 20,color: Colors.black),),
+                                    Text(NumberFormat("#,###", "en_US").format((detail.price)) +" đ",
                                         style: TextStyle(fontSize: 25,color: Color(0xFFFB9116))
                                     ),
                                   ],
@@ -145,17 +159,16 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                               ],
                             ),
                             SizedBox(height: 10),
-                            IndexedStack(
-                              index: indexTab,
+                            Column(
                               children: [
                                 Visibility(
-                                  visible: true,
-                                  child: Text((detail?.description).toString(),
+                                  visible: indexTab == 0 ? true : false,
+                                  child: Text((detail.description).toString(),
                                     style: TextStyle(fontSize: 14,color: Color(0xFF656565),height: 1.9),
                                   ),
                                 ),
                                 Visibility(
-                                  visible: true,
+                                  visible: indexTab == 1 ? true : false,
                                   child: Text(
                                     "Trong tim mỗi người luôn có một ly trà ngon, lúc rãnh rỗi sau buổi chiều, cùng với ánh hoàng hôn ấm áp, cơn gió nhẹ phảng phất dễ chịu, nụ cười ngọt ngào của người yêu",
                                     style: TextStyle(fontSize: 14,color: Color(0xFF656565),height: 1.9),
@@ -167,18 +180,24 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text('Size : ',style: TextStyle(fontSize: 20,color: Colors.black),),
-                                GFButton(
-                                    onPressed: (){},
-                                    text: "M",
-                                    type: GFButtonType.transparent,
-                                    textStyle: TextStyle(fontSize: 16,color: Color(0xFFFB9116),fontFamily: "Oswald-Regular")
+                                TextButton(
+                                  style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                                  ),
+                                  onPressed: () {
+                                    return _activeSize(1);
+                                  },
+                                  child: Text('M',style: TextStyle(fontSize: 16,color: _activeColor == 1? Color(0xFFFB9116):Colors.black)),
                                 ),
-                                GFButton(
-                                  onPressed: (){},
-                                  text: "L",
-                                  type: GFButtonType.transparent,
-                                  textStyle: TextStyle(fontSize: 16,color: Colors.black,fontFamily: "Oswald-Regular"),
-                                ),
+                                TextButton(
+                                  style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                                  ),
+                                  onPressed: () {
+                                    return _activeSize(2);
+                                  },
+                                  child: Text('L',style: TextStyle(fontSize: 16,color: _activeColor == 2? Color(0xFFFB9116):Colors.black)),
+                                )
                               ],
                             ),
                             SizedBox(height: 15),
@@ -202,7 +221,7 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                                   width: 40,
                                   height: 40,
                                   margin: EdgeInsets.only(left: 10,right: 10),
-                                  child: TextField(
+                                  child: TextFormField(
                                     textAlign: TextAlign.center,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
@@ -211,6 +230,9 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                                       contentPadding: EdgeInsets.only(top: 5),
                                     ),
                                     style: TextStyle(fontSize: 18),
+                                    onChanged: (String val) {
+                                      ref.read(cartProvider.notifier).onChange(int.parse(val));
+                                    },
                                   ),
                                 ),
                                 Container(
@@ -250,6 +272,7 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                                 Expanded(
                                   child: GFButton(
                                     onPressed: (){
+                                      ref.read(cartProvider.notifier).AddCart(detail.id.toString(),detail.title.toString(),detail.images![0].toString(),int.parse(detail.price.toString()));
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
                                     },
                                     text: "Thêm Vào Giỏ Hàng",
@@ -257,6 +280,7 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                                     shape: GFButtonShape.pills,
                                     size: GFSize. LARGE,
                                     textStyle: TextStyle(fontSize: 15,color: Color(0xFFFFFFFF)),
+                                    textColor: Color(0xFFFB9116),
                                   ),
                                 ),
                               ],

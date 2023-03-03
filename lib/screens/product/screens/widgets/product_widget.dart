@@ -12,7 +12,7 @@ class ItemProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     final transitionType = ContainerTransitionType.fade;
     return SizedBox(
-      width: 150,
+      width: 160,
       child: OpenContainer(
         transitionType: transitionType,
         transitionDuration: Duration(seconds: 1),
@@ -33,7 +33,7 @@ class ItemProduct extends StatelessWidget {
                           child: Image.network((item.images![0]).toString(),fit: BoxFit.fitWidth,height: 125,)
                       ),
                       SizedBox(height: 10),
-                      Text(item.title.toString(),style: TextStyle(fontSize: 13,color: Colors.black),),
+                      Text(item.title.toString(),style: TextStyle(fontSize: 14,color: Colors.black),overflow: TextOverflow.ellipsis,),
                       SizedBox(height: 5),
                       Text(NumberFormat("#,###", "en_US").format((item.price)) +" đ",
                           style: TextStyle(fontSize: 13,color: Color(0xFFFB9116))

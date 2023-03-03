@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-// import 'api_constant.dart';
 import 'dio_client.dart';
 
 class ApiRequest {
@@ -7,7 +6,4 @@ class ApiRequest {
   ApiRequest(){
     _dio = DioClient.instance.dio;
   }
-  // Future getProducts() {
-  //   return _dio.get(ApiConstant.LIST_PRODUCT_URL);
-  // }
 }

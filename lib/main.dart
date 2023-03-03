@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 
+import 'screens/cart/model/cart_model_hive.dart';
 import 'screens/product/screens/home_screens.dart';
 
-void main() {
+void main() async{
+  await Hive.initFlutter();
+  Hive.registerAdapter(CartModelHiveAdapter());
+  var box = await Hive.openBox('cart');
+
   // runApp(const MyApp());
   runApp(ProviderScope(child: MyApp()));
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,7 +30,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: "Oswald-Regular"
       ),
-      home: HomePageProduct(),
+      home: ProductScreen(),
+      // home: HomePage(),
     );
   }
 }

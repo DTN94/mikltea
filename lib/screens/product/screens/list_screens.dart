@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:mikltea/screens/product/screens/home_screens.dart';
-import 'package:mikltea/screens/product/screens/list1_screens.dart';
-import 'package:mikltea/screens/product/screens/product_screens.dart';
-import 'package:mikltea/screens/product/widgets/search_widget.dart';
 
-import '../widgets/product_widget.dart';
+import '../model/categories_model.dart';
+import '../model/product_dio.dart';
+import '../model/product_model.dart';
+import 'home_screens.dart';
+import 'widgets/bottombar.dart';
+import 'widgets/product_widget.dart';
+import 'widgets/search_widget.dart';
 
-class ListProduct extends StatefulWidget {
-  const ListProduct({Key? key}) : super(key: key);
+class ListProduct extends ConsumerStatefulWidget {
+  const ListProduct({Key? key, required this.id}) : super(key: key);
+  final num id;
 
   @override
-  State<ListProduct> createState() => _ListProductState();
+  _ListProductState createState() => _ListProductState();
 }
 
-class _ListProductState extends State<ListProduct> {
+class _ListProductState extends ConsumerState<ListProduct> {
   @override
   Widget build(BuildContext context) {
+    final categories = ref.watch(futureListCategoryProvider);
+    final list_product = ref.watch(futureProductCategoryProvider(widget.id.toString()));
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar:AppBar(
         backgroundColor: Color(0xFFFFFFFF),
         elevation: 0,
@@ -75,7 +82,6 @@ class _ListProductState extends State<ListProduct> {
       body:SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.only(left: 20,right: 20,bottom: 10),
-          color: Color(0xFFFFFFFF),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,57 +93,55 @@ class _ListProductState extends State<ListProduct> {
               SizedBox(height: 15),
               Search(),
               SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePageProduct()));
-                      },
-                      child: Text('Trà Sữa',
-                        style: TextStyle(fontSize: 14,color: Colors.black,fontFamily: 'Oswald-Medium'),
-                        textAlign: TextAlign.left,
+
+              categories.when(
+                error: (err, stack) => Text('Error: $err'),
+                data: (List<CategoriesModel>? data){
+                  if(data != null){
+                    return SizedBox(
+                      height: 25,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: data.length,
+                        itemBuilder: (BuildContext context, i) {
+                          return Container(
+                            margin: EdgeInsets.only(right: 25),
+                            child: InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ListProduct(id: num.parse(data[i].id.toString()))));
+                              },
+                              child: Text(data[i].name.toString(),
+                                style: TextStyle(fontSize: 15,color: widget.id.toString() == data[i].id.toString()? Color(0xFFFB9116):Colors.black,fontFamily: 'Oswald-Medium'),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text('Trà Trái cây',
-                      style: TextStyle(fontSize: 14,color: Color(0xFFFB9116),fontFamily: 'Oswald-Medium'),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ListProduct1()));
-                      },
-                      child: Text('Nước ép',
-                        style: TextStyle(fontSize: 14,color: Colors.black,fontFamily: 'Oswald-Medium'),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                ],
+                    );
+                  }else{
+                    return Container();
+                  }
+                },
+                loading: () =>  Center(child: CircularProgressIndicator()),
               ),
+
               SizedBox(height: 15),
-              GridView.count(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                childAspectRatio: 1.0,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-                children: [
-                  // ItemProduct(),
-                  // ItemProduct(),
-                  // ItemProduct(),
-                  // ItemProduct(),
-                  // ItemProduct(),
-                  // ItemProduct(),
-                  // ItemProduct(),
-                  // ItemProduct(),
-                ],
+              list_product.when(
+                error: (err, stack) => Text('Error: $err'),
+                data: (List<ProductModel>? data){
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 205,childAspectRatio:0.9),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: data?.length,
+                    itemBuilder: (BuildContext context, i) {
+                      return ItemProduct(item: data![i]);
+                    },
+                  );
+                },
+                loading: () => Center(child: const CircularProgressIndicator()),
               ),
+
               SizedBox(height: 10),
               Container(
                 alignment: Alignment.center,
@@ -156,6 +160,7 @@ class _ListProductState extends State<ListProduct> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

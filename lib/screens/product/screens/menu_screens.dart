@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/categories_dio.dart';
 import '../model/categories_model.dart';
+import '../model/product_dio.dart';
 import '../model/product_model.dart';
-import '../widgets/product_widget.dart';
+import 'widgets/bottombar.dart';
+import 'widgets/product_widget.dart';
+
 
 class MenuProduct extends ConsumerStatefulWidget {
   const MenuProduct({Key? key}) : super(key: key);
@@ -41,6 +43,7 @@ class _MenuProductState extends ConsumerState<MenuProduct> with TickerProviderSt
   Widget build(BuildContext context) {
     final categories = ref.watch(futureListCategoryProvider);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar:AppBar(
         backgroundColor: Color(0xFFFFFFFF),
         elevation: 0,
@@ -56,7 +59,6 @@ class _MenuProductState extends ConsumerState<MenuProduct> with TickerProviderSt
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(right: 20,bottom: 20,left: 20),
-          color: Colors.white,
           child: Column(
             children: [
               categories.when(
@@ -106,125 +108,19 @@ class _MenuProductState extends ConsumerState<MenuProduct> with TickerProviderSt
                       index: indexTab,
                       children: [
                         for(int i = 0;i < data.length;i++)...[
-
                           Visibility(
                             visible: true,
                             child: TabProduct(id: num.parse(data[i].id.toString())),
                           ),
                         ],
-                        // Visibility(
-                        //   visible: true,
-                        //   child: GridView.count(
-                        //     physics: NeverScrollableScrollPhysics(),
-                        //     shrinkWrap: true,
-                        //     crossAxisCount: 2,
-                        //     childAspectRatio: 1.0,
-                        //     crossAxisSpacing: 5,
-                        //     mainAxisSpacing: 5,
-                        //     children: [
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //     ],
-                        //   ),
-                        // ),
-                        // Visibility(
-                        //   visible: true,
-                        //   child: GridView.count(
-                        //     physics: NeverScrollableScrollPhysics(),
-                        //     shrinkWrap: true,
-                        //     crossAxisCount: 2,
-                        //     childAspectRatio: 1.0,
-                        //     crossAxisSpacing: 5,
-                        //     mainAxisSpacing: 5,
-                        //     children: [
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //     ],
-                        //   ),
-                        // ),
-                        // Visibility(
-                        //   visible: true,
-                        //   child: GridView.count(
-                        //     physics: NeverScrollableScrollPhysics(),
-                        //     shrinkWrap: true,
-                        //     crossAxisCount: 2,
-                        //     childAspectRatio: 1.0,
-                        //     crossAxisSpacing: 5,
-                        //     mainAxisSpacing: 5,
-                        //     children: [
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //     ],
-                        //   ),
-                        // ),
-                        // Visibility(
-                        //   visible: true,
-                        //   child: GridView.count(
-                        //     physics: NeverScrollableScrollPhysics(),
-                        //     shrinkWrap: true,
-                        //     crossAxisCount: 2,
-                        //     childAspectRatio: 1.0,
-                        //     crossAxisSpacing: 5,
-                        //     mainAxisSpacing: 5,
-                        //     children: [
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //     ],
-                        //   ),
-                        // ),
-                        // Visibility(
-                        //   visible: true,
-                        //   child: GridView.count(
-                        //     physics: NeverScrollableScrollPhysics(),
-                        //     shrinkWrap: true,
-                        //     crossAxisCount: 2,
-                        //     childAspectRatio: 1.0,
-                        //     crossAxisSpacing: 5,
-                        //     mainAxisSpacing: 5,
-                        //     children: [
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //       // ItemProduct(),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     );
                   }else{
-                    return Container();
+                    return Container(
+                      child: Center(
+                        child: Text("Đang được cập nhật", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.red)),
+                      ),
+                    );
                   }
                 },
                 loading: () =>  Center(child: CircularProgressIndicator()),
@@ -233,6 +129,7 @@ class _MenuProductState extends ConsumerState<MenuProduct> with TickerProviderSt
           ),
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

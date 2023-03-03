@@ -30,7 +30,7 @@ class _OrderSuccessState extends State<OrderSuccess> {
               SizedBox(height: 70),
               GFButton(
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePageProduct()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductScreen()));
                 },
                 text: "Trở Về",
                 color: Color(0xFFFFFFFF),

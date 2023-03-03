@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
+import '../../product/provider/cart_provider.dart';
+import '../../product/screens/widgets/bottombar.dart';
+import '../model/cart_model.dart';
 import 'payment_screens.dart';
 
-class CartPage extends StatefulWidget {
+var keyword= '';
+List<CartModel> items = [];
+
+class CartPage extends ConsumerWidget {
   const CartPage({Key? key}) : super(key: key);
 
   @override
-  State<CartPage> createState() => _CartPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartState = ref.watch(cartProvider);
+    items = cartState.listCarts;
+    num total = 0;
+    for(int i = 0;i < items.length;i++){
+      total += num.parse(items[i].price.toString()) * num.parse(items[i].qty.toString());
+    };
 
-class _CartPageState extends State<CartPage> {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar:AppBar(
         backgroundColor: Colors.transparent,
@@ -32,284 +42,110 @@ class _CartPageState extends State<CartPage> {
           padding: EdgeInsets.only(left: 20,bottom: 20,right: 20,top: 10),
           child: Column(
             children: [
-              Container(
-                height: 140,
-                margin: EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(width: 1,color: Color(0xFFE8E8E8)),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            color: Color(0xFFEFE3FF),
-                            child: Image.asset('assets/images/cart.png'),
+              items.length > 0 ? Column(
+                children: [
+                  for(int i = 0;i < items.length;i++)...[
+                    Container(
+                      height: 140,
+                      margin: EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 1,color: Color(0xFFE8E8E8)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  color: Color(0xFFEFE3FF),
+                                  child: Image.network(items[i].photo.toString(),fit: BoxFit.fitHeight,height: 120,),
+                                ),
+                              )
                           ),
-                        )
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 20,top: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Sữa Tươi Trân Chân Đường Đen',style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
-                            SizedBox(height: 10),
-                            Text('Size M',style: TextStyle(fontSize: 14,color: Color(0xFF6C6C6C)),),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('49.000đ',style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
-                                Column(
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                margin: EdgeInsets.only(left: 20,top: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Text(items[i].title.toString(),style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
+                                    SizedBox(height: 10),
+                                    Text('Size M',style: TextStyle(fontSize: 14,color: Color(0xFF6C6C6C)),),
+                                    SizedBox(height: 20),
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          width: 25,
-                                          height: 25,
-                                          child: GFButton(
-                                            onPressed: (){},
-                                            text: "-",
-                                            type: GFButtonType.outline,
-                                            shape: GFButtonShape.pills,
-                                            textStyle: TextStyle(fontSize: 22,color: Color(0xFFFB9116)),
-                                            color: Color(0xFFFB9116),
-                                            focusColor: Color(0xFFFB9116),
-                                          ),
+                                        Text(NumberFormat("#,###", "en_US").format((items[i].price! * num.parse(items[i].qty.toString()))) +" đ",
+                                            style: TextStyle(fontSize: 14,color: Color(0xFF222222))
                                         ),
-                                        Container(
-                                          width: 25,
-                                          height: 25,
-                                          margin: EdgeInsets.only(left: 5,right: 5),
-                                          child: TextField(
-                                            textAlign: TextAlign.center,
-                                            textAlignVertical: TextAlignVertical.center,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                                              hintText: '2',
-                                              contentPadding: EdgeInsets.only(top: 5),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 25,
+                                                  height: 25,
+                                                  child: GFButton(
+                                                    onPressed: (){},
+                                                    text: "-",
+                                                    type: GFButtonType.outline,
+                                                    shape: GFButtonShape.pills,
+                                                    textStyle: TextStyle(fontSize: 22,color: Color(0xFFFB9116)),
+                                                    color: Color(0xFFFB9116),
+                                                    focusColor: Color(0xFFFB9116),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 25,
+                                                  height: 25,
+                                                  margin: EdgeInsets.only(left: 5,right: 5),
+                                                  child: TextField(
+                                                    textAlign: TextAlign.center,
+                                                    textAlignVertical: TextAlignVertical.center,
+                                                    decoration: InputDecoration(
+                                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+                                                      hintText: items[i].qty.toString(),
+                                                      contentPadding: EdgeInsets.only(top: 5),
+                                                    ),
+                                                    style: TextStyle(fontSize: 14),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 25,
+                                                  height: 25,
+                                                  child: GFButton(
+                                                    onPressed: (){
+
+                                                    },
+                                                    text: "+",
+                                                    type: GFButtonType.outline,
+                                                    shape: GFButtonShape.pills,
+                                                    textStyle: TextStyle(fontSize: 18,color: Color(0xFFFB9116)),
+                                                    color: Color(0xFFFB9116),
+                                                    focusColor: Color(0xFFFB9116),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            style: TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 25,
-                                          height: 25,
-                                          child: GFButton(
-                                            onPressed: (){},
-                                            text: "+",
-                                            type: GFButtonType.outline,
-                                            shape: GFButtonShape.pills,
-                                            textStyle: TextStyle(fontSize: 18,color: Color(0xFFFB9116)),
-                                            color: Color(0xFFFB9116),
-                                            focusColor: Color(0xFFFB9116),
-                                          ),
-                                        ),
+                                          ],
+                                        )
                                       ],
-                                    ),
+                                    )
                                   ],
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                height: 140,
-                margin: EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(width: 1,color: Color(0xFFE8E8E8)),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            color: Color(0xFFEFE3FF),
-                            child: Image.asset('assets/images/cart.png'),
-                          ),
-                        )
-                    ),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20,top: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Sữa Tươi Trân Chân Đường Đen',style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
-                              SizedBox(height: 10),
-                              Text('Size M',style: TextStyle(fontSize: 14,color: Color(0xFF6C6C6C)),),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('49.000đ',style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            child: GFButton(
-                                              onPressed: (){},
-                                              text: "-",
-                                              type: GFButtonType.outline,
-                                              shape: GFButtonShape.pills,
-                                              textStyle: TextStyle(fontSize: 22,color: Color(0xFFFB9116)),
-                                              color: Color(0xFFFB9116),
-                                              focusColor: Color(0xFFFB9116),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            margin: EdgeInsets.only(left: 5,right: 5),
-                                            child: TextField(
-                                              textAlign: TextAlign.center,
-                                              textAlignVertical: TextAlignVertical.center,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                                                hintText: '2',
-                                                contentPadding: EdgeInsets.only(top: 5),
-                                              ),
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            child: GFButton(
-                                              onPressed: (){},
-                                              text: "+",
-                                              type: GFButtonType.outline,
-                                              shape: GFButtonShape.pills,
-                                              textStyle: TextStyle(fontSize: 18,color: Color(0xFFFB9116)),
-                                              color: Color(0xFFFB9116),
-                                              focusColor: Color(0xFFFB9116),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
+                                ),
                               )
-                            ],
-                          ),
-                        )
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                height: 140,
-                margin: EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(width: 1,color: Color(0xFFE8E8E8)),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            color: Color(0xFFEFE3FF),
-                            child: Image.asset('assets/images/cart.png'),
-                          ),
-                        )
+                          )
+                        ],
+                      ),
                     ),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20,top: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Sữa Tươi Trân Chân Đường Đen',style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
-                              SizedBox(height: 10),
-                              Text('Size M',style: TextStyle(fontSize: 14,color: Color(0xFF6C6C6C)),),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('49.000đ',style: TextStyle(fontSize: 14,color: Color(0xFF222222)),),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            child: GFButton(
-                                              onPressed: (){},
-                                              text: "-",
-                                              type: GFButtonType.outline,
-                                              shape: GFButtonShape.pills,
-                                              textStyle: TextStyle(fontSize: 22,color: Color(0xFFFB9116)),
-                                              color: Color(0xFFFB9116),
-                                              focusColor: Color(0xFFFB9116),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            margin: EdgeInsets.only(left: 5,right: 5),
-                                            child: TextField(
-                                              textAlign: TextAlign.center,
-                                              textAlignVertical: TextAlignVertical.center,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                                                hintText: '2',
-                                                contentPadding: EdgeInsets.only(top: 5),
-                                              ),
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            child: GFButton(
-                                              onPressed: (){},
-                                              text: "+",
-                                              type: GFButtonType.outline,
-                                              shape: GFButtonShape.pills,
-                                              textStyle: TextStyle(fontSize: 18,color: Color(0xFFFB9116)),
-                                              color: Color(0xFFFB9116),
-                                              focusColor: Color(0xFFFB9116),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                    )
-                  ],
-                ),
+                  ]
+                ],
+              ) : Center(
+                child: Text('Giỏ hàng rỗng.'),
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -324,7 +160,7 @@ class _CartPageState extends State<CartPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Tổng tạm tính',style: TextStyle(fontSize: 14,color: Color(0xFF656565))),
-                          Text('147.000đ',style: TextStyle(fontSize: 14,color: Color(0xFF656565))),
+                          Text(NumberFormat("#,###", "en_US").format(total) + " đ",style: TextStyle(fontSize: 15,color: Color(0xFF656565))),
                         ],
                       ),
                       SizedBox(height: 15),
@@ -340,7 +176,7 @@ class _CartPageState extends State<CartPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Tổng cộng',style: TextStyle(fontSize: 15,color: Color(0xFF222222))),
-                          Text('147.000đ',style: TextStyle(fontSize: 15,color: Color(0xFF222222))),
+                          Text(NumberFormat("#,###", "en_US").format(total) + " đ",style: TextStyle(fontSize: 16,color: Color(0xFF222222))),
                         ],
                       ),
                       SizedBox(height: 15),
@@ -366,6 +202,7 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

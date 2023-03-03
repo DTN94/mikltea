@@ -5,10 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:milktea/provider/cart_controller.dart';
 import 'package:milktea/provider/product_controller.dart';
 
 import '../model/cart_model.dart';
+import '../repository/cart_repository.dart';
 
 // ignore: must_be_immutable
 class ProductDetailScreen extends ConsumerWidget {
@@ -260,9 +260,16 @@ class ProductDetailScreen extends ConsumerWidget {
                             height: 50,
                             child: ElevatedButton(
                               onPressed: () {
-                                ref.watch(
-                                  addToCartProvider(CartModel(id: product.id, productId: product.id, productName: product.name, productPhoto: product.photo, quantity: 1, price: product.regularPrice)),
-                                );
+                                ref.read(cartProvider.notifier).removeFromCart(
+                                      CartModel(
+                                        id: product.id,
+                                        productId: product.id,
+                                        productName: product.name,
+                                        productPhoto: product.photo,
+                                        quantity: 1,
+                                        price: product.regularPrice,
+                                      ),
+                                    );
                                 context.go(context.namedLocation('cart'));
                               },
                               style: ElevatedButton.styleFrom(

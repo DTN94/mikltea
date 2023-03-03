@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:milktea/model/cart_model.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'cart_repository.g.dart';
-
-@riverpod
-CartRepository cartRepository(CartRepositoryRef ref) => CartRepository();
+final cartProvider = ChangeNotifierProvider((ref) => CartRepository());
 
 class CartRepository extends ChangeNotifier {
   List<CartModel> carts = Hive.box<CartModel>('CART_BOX').values.toList();
@@ -17,7 +14,7 @@ class CartRepository extends ChangeNotifier {
     carts = Hive.box<CartModel>('CART_BOX').values.toList();
   }
 
-  Future<void> addToCart(CartModel cart) async {
+  void addToCart(CartModel cart) {
     int existedId = carts.indexWhere((e) => e.productId == cart.productId);
     if (existedId > -1) {
       carts[existedId].quantity += 1;
@@ -30,7 +27,29 @@ class CartRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeFromCart(CartModel cart) async {
-    await box.clear();
+  void removeFromCart(CartModel cart) {
+    int existedId = carts.indexWhere((e) => e.productId == cart.productId);
+    if (existedId > -1) {
+      if (carts[existedId].quantity > 1) {
+        carts[existedId].quantity -= 1;
+
+        box.putAt(existedId, carts[existedId]);
+      } else {
+        box.deleteAt(existedId);
+      }
+    }
+
+    reload();
+    notifyListeners();
+  }
+
+  int getTotal() {
+    int total = 0;
+    for (var e in carts) {
+      total += (e.price * e.quantity);
+    }
+
+    reload();
+    return total;
   }
 }

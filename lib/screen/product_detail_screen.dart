@@ -260,7 +260,7 @@ class ProductDetailScreen extends ConsumerWidget {
                             height: 50,
                             child: ElevatedButton(
                               onPressed: () {
-                                ref.read(cartProvider.notifier).removeFromCart(
+                                ref.read(cartProvider.notifier).addToCart(
                                       CartModel(
                                         id: product.id,
                                         productId: product.id,

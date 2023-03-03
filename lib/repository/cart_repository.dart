@@ -49,7 +49,6 @@ class CartRepository extends ChangeNotifier {
       total += (e.price * e.quantity);
     }
 
-    reload();
     return total;
   }
 }

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import '../../cart/provider/cart_provider.dart';
 import '../../cart/screens/cart_screens.dart';
 import '../model/product_dio.dart';
 import '../model/product_model.dart';
-import '../provider/cart_provider.dart';
 
 
 class DetailProduct extends ConsumerStatefulWidget {
@@ -250,7 +248,6 @@ class _DetailProductState extends ConsumerState<DetailProduct> with TickerProvid
                                 ),
                               ],
                             ),
-
                             SizedBox(height: 20),
                             Row(
                               children: [

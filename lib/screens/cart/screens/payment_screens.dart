@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 
-import '../../product/provider/cart_provider.dart';
 import '../../product/screens/home_screens.dart';
+import '../provider/cart_provider.dart';
 import 'cart_screens.dart';
 import 'success_screens.dart';
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
-import '../../product/provider/cart_provider.dart';
 import '../../product/screens/widgets/bottombar.dart';
 import '../model/cart_model.dart';
+import '../provider/cart_provider.dart';
 import 'payment_screens.dart';
 
 var keyword= '';
@@ -103,15 +103,18 @@ class CartPage extends ConsumerWidget {
                                                   width: 25,
                                                   height: 25,
                                                   margin: EdgeInsets.only(left: 5,right: 5),
-                                                  child: TextField(
+                                                  child: TextFormField(
                                                     textAlign: TextAlign.center,
                                                     textAlignVertical: TextAlignVertical.center,
+                                                    style: TextStyle(fontSize: 14),
                                                     decoration: InputDecoration(
                                                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
                                                       hintText: items[i].qty.toString(),
                                                       contentPadding: EdgeInsets.only(top: 5),
                                                     ),
-                                                    style: TextStyle(fontSize: 14),
+                                                    onChanged: (String val) {
+                                                      ref.read(cartProvider.notifier).onChange(int.parse(val));
+                                                    },
                                                   ),
                                                 ),
                                                 Container(
@@ -119,7 +122,6 @@ class CartPage extends ConsumerWidget {
                                                   height: 25,
                                                   child: GFButton(
                                                     onPressed: (){
-
                                                     },
                                                     text: "+",
                                                     type: GFButtonType.outline,

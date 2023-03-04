@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:milktea/screen/widget/appbar_name_widget.dart';
 
@@ -56,7 +57,7 @@ class CartScreen extends ConsumerWidget {
                                       children: const [CircularProgressIndicator()],
                                     ),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.fitWidth,
                                   ),
                                 ),
                               ),
@@ -208,7 +209,9 @@ class CartScreen extends ConsumerWidget {
                       width: 180,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.go(context.namedLocation('cart_confirm'));
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50),

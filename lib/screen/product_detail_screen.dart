@@ -16,7 +16,6 @@ class ProductDetailScreen extends ConsumerWidget {
 
   final int productId;
 
-  List<String> btnSizes = ['M', 'L'];
   List<String> btnDetail = ['Chi tiết', 'Thành phần'];
   final _tabProvider = StateProvider((ref) => 0);
   final _sizeProvider = StateProvider((ref) => 0);
@@ -169,36 +168,48 @@ class ProductDetailScreen extends ConsumerWidget {
                           );
                         },
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Size:',
-                            style: TextStyle(fontFamily: 'Oswald', fontSize: 14, color: Color(0xff222222)),
-                          ),
-                          const SizedBox(width: 20),
-                          ...List.generate(
-                            btnSizes.length,
-                            (index) => InkWell(
-                              splashColor: const Color(0xffFB9116),
-                              onTap: () {
-                                ref.read(_sizeProvider.notifier).state = index;
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(12),
-                                //color: index == _selectedSize ? Colors.blue : Colors.white,
-                                child: Text(
-                                  btnSizes[index],
-                                  style: TextStyle(
-                                    color: index == selectedSize ? const Color(0xffFB9116) : const Color(0xff222222),
-                                  ),
-                                ),
+                      const SizedBox(height: 15),
+                      if (product.sizes.isNotEmpty)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Size:',
+                              style: TextStyle(fontFamily: 'Oswald', fontSize: 15, color: Color(0xff222222)),
+                            ),
+                            const SizedBox(width: 20),
+                            SizedBox(
+                              height: 30,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: product.sizes.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      ref.read(_sizeProvider.notifier).state = index;
+                                    },
+                                    child: Container(
+                                      //decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+                                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                                      color: index == selectedSize ? const Color(0xffFB9116) : Colors.white,
+                                      child: Center(
+                                        child: Text(
+                                          product.sizes[index].name,
+                                          style: TextStyle(
+                                            color: index == selectedSize ? Colors.white : const Color(0xff222222),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
+                          ],
+                        ),
+                      const SizedBox(height: 15),
                       Row(
                         children: [
                           ElevatedButton(

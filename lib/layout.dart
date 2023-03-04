@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:milktea/screen/cart_confirm_screen.dart';
 import 'package:milktea/screen/cart_screen.dart';
 import 'package:milktea/screen/index_screen.dart';
 import 'package:milktea/screen/intro_screen.dart';
@@ -36,6 +37,15 @@ final GoRouter router = GoRouter(
               builder: (BuildContext context, GoRouterState state) {
                 return const CartScreen();
               },
+              routes: [
+                GoRoute(
+                  path: 'cart_confirm',
+                  name: 'cart_confirm',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return const CartConfirm();
+                  },
+                ),
+              ],
             ),
           ],
         ),

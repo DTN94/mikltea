@@ -47,9 +47,7 @@ class ProductRepository {
     final response = await dio.get(BASE_URL, queryParameters: {'action': 'detail', 'id': id});
 
     if (response.statusCode == 200) {
-      return Future.delayed(const Duration(milliseconds: 300), () {
-        return parse(response.data).where((product) => product.id == id).first;
-      });
+      return parse(response.data).first;
     } else {
       throw Exception('Unexpected error occured!');
     }

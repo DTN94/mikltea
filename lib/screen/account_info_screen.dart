@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AccountInfoScreen extends ConsumerWidget {
   const AccountInfoScreen({super.key});
@@ -17,48 +18,14 @@ class AccountInfoScreen extends ConsumerWidget {
           onTap: () => Navigator.of(context).pop(),
           child: Container(
             margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: const Color(0xffFFFFFF), borderRadius: BorderRadius.circular(10)),
             alignment: Alignment.center,
             child: SvgPicture.asset(
-              'assets/images/Arrow - Left.svg',
+              'assets/icon/arrow_left.svg',
               width: 20,
               height: 20,
             ),
           ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              width: 80,
-              height: 40,
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: const Color(0xffF2F2F2), borderRadius: BorderRadius.circular(20)),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icon/three_dots.svg',
-                    width: 10,
-                    height: 4,
-                  ),
-                  const VerticalDivider(
-                    color: Colors.black,
-                    indent: 10,
-                    endIndent: 10,
-                    thickness: 1,
-                  ),
-                  SvgPicture.asset(
-                    'assets/icon/circle_x.svg',
-                    width: 20,
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -89,18 +56,17 @@ class AccountInfoScreen extends ConsumerWidget {
                           clipBehavior: Clip.none,
                           alignment: AlignmentDirectional.bottomCenter,
                           children: [
-                            Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                image: const DecorationImage(
-                                  image: AssetImage("assets/images/avatar.jpg"),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
+                            ClipPath(
+                              clipper: const ShapeBorderClipper(shape: CircleBorder()),
+                              clipBehavior: Clip.hardEdge,
+                              child: SizedBox(
+                                width: 80,
+                                height: 80,
+                                child: CachedNetworkImage(
+                                  imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
+                                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                             ),
@@ -188,7 +154,7 @@ class AccountInfoScreen extends ConsumerWidget {
                                         prefixIcon: Padding(
                                           padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
                                           child: Image.asset(
-                                            'assets/images/flag_vi.png',
+                                            'assets/image/flag_vi.png',
                                             width: 26,
                                             height: 20,
                                           ),
@@ -240,7 +206,7 @@ class AccountInfoScreen extends ConsumerWidget {
                                   suffixIcon: Padding(
                                     padding: const EdgeInsets.fromLTRB(15, 0, 20, 0),
                                     child: Image.asset(
-                                      'assets/images/check.png',
+                                      'assets/image/check.png',
                                       width: 20,
                                       height: 20,
                                     ),
@@ -288,7 +254,7 @@ class AccountInfoScreen extends ConsumerWidget {
                             const SizedBox(height: 20),
                             Row(
                               children: [
-                                Image.asset('assets/images/google.png'),
+                                Image.asset('assets/image/google.png'),
                                 const SizedBox(width: 15),
                                 const Align(
                                   alignment: Alignment.centerLeft,
@@ -318,7 +284,7 @@ class AccountInfoScreen extends ConsumerWidget {
                             ),
                             Row(
                               children: [
-                                Image.asset('assets/images/facebook.png'),
+                                Image.asset('assets/image/facebook.png'),
                                 const SizedBox(width: 15),
                                 const Align(
                                   alignment: Alignment.centerLeft,

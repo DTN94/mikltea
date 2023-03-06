@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountScreen extends ConsumerWidget {
   const AccountScreen({super.key});
@@ -103,7 +104,9 @@ class AccountScreen extends ConsumerWidget {
                             height: 50,
                             child: TextButton(
                               style: TextButton.styleFrom(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero))),
-                              onPressed: () {},
+                              onPressed: () {
+                                context.go(context.namedLocation('account_info'));
+                              },
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 // ignore: prefer_const_literals_to_create_immutables

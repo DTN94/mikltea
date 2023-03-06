@@ -3,10 +3,8 @@ import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import '../model/product_model.dart';
-part 'product_repository.g.dart';
 
-@riverpod
-ProductRepository productRepository(ProductRepositoryRef ref) => ProductRepository();
+final productRepositoryProvider = Provider<ProductRepository>((ref) => ProductRepository());
 
 final dio = Dio();
 // ignore: non_constant_identifier_names

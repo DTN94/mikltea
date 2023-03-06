@@ -5,10 +5,7 @@ import 'package:dio/dio.dart';
 
 import '../model/category_model.dart';
 
-part 'category_repository.g.dart';
-
-@riverpod
-CategoryRepository categoryRepository(CategoryRepositoryRef ref) => CategoryRepository();
+final categoryRepositoryProvider = Provider<CategoryRepository>((ref) => CategoryRepository());
 
 final dio = Dio();
 // ignore: non_constant_identifier_names

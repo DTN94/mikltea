@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 
-part 'slide_repository.g.dart';
-
-@riverpod
-SlideRepository slideRepository(SlideRepositoryRef ref) => SlideRepository();
+final slideRepositoryProvider = Provider<SlideRepository>((ref) => SlideRepository());
 
 final dio = Dio();
 // ignore: non_constant_identifier_names

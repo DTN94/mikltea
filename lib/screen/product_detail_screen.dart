@@ -19,11 +19,14 @@ class ProductDetailScreen extends ConsumerWidget {
   List<String> btnDetail = ['Chi tiết', 'Thành phần'];
   final _tabProvider = StateProvider((ref) => 0);
   final _sizeProvider = StateProvider((ref) => 0);
+  final _size = StateProvider((ref) => 0);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final int selectedTab = ref.watch(_tabProvider);
     final int selectedSize = ref.watch(_sizeProvider);
+    final int size = ref.watch(_size);
+
     final product = ref.watch(getProductProvider(productId));
 
     return Scaffold(
@@ -213,7 +216,11 @@ class ProductDetailScreen extends ConsumerWidget {
                       Row(
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (size > 0) {
+                                ref.read(_size.notifier).state--;
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               shape: const CircleBorder(),
                               side: const BorderSide(color: Color(0xffFB9116)),
@@ -228,13 +235,15 @@ class ProductDetailScreen extends ConsumerWidget {
                             margin: const EdgeInsets.only(left: 5, right: 5),
                             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: Colors.white, border: Border.all(color: const Color(0xffDDDDE3))),
-                            child: const Text(
-                              '3',
-                              style: TextStyle(color: Colors.black, fontSize: 16),
+                            child: Text(
+                              size.toString(),
+                              style: const TextStyle(color: Colors.black, fontSize: 16),
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              ref.read(_size.notifier).state++;
+                            },
                             style: ElevatedButton.styleFrom(
                               shape: const CircleBorder(),
                               side: const BorderSide(color: Color(0xffFB9116)),
@@ -277,7 +286,7 @@ class ProductDetailScreen extends ConsumerWidget {
                                         productId: product.id,
                                         productName: product.name,
                                         productPhoto: product.photo,
-                                        quantity: 1,
+                                        quantity: size,
                                         price: product.regularPrice,
                                       ),
                                     );
